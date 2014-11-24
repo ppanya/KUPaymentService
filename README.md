@@ -25,6 +25,9 @@ There is not include parts that use bank api to redeem money from this service o
 2. Current balance for each user.
 3. (Extra) Support multiple currency and multiple language
 
+<h3>API Specification</h3>
+<b><i>Coming Soon</i><b>
+
 <h3>Reference</h3>
 This part is reference of my research through paypal system.
 I found this [link](https://www.paypal.com/cy/webapps/mpp/ua/servicedescription-full) is really helpful.
