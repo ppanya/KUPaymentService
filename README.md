@@ -13,7 +13,7 @@ There is not include parts that use bank api to redeem money from this service o
 <h3>Specific Term</h3>
 * Payment - a payment for goods/services that store send to the recipient (customer).
 * Problem - a problem that broke an agreement of two stakeholders which is store and customer.
-<br><b><i>note:</i></b> It should have a standard for Problem term but it seem hard to create.
+<br><b><i>note:</i></b> It should have a standard for Problem term but it seem hard to set it up.
 
 <h3>Use Cases</h3>
 1. Store send a payment to customer.
