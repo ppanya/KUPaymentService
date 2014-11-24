@@ -8,12 +8,12 @@ There is not include parts that use bank api to redeem money from this service o
 * Store
 * Customer
 * Payment System Admin
-note: I consider that store and customer is a different user type. But I still consider about customer to customer transaction, should this service support it or not.
+---note: I consider that store and customer is a different user type. But I still consider about customer to customer transaction, should this service support it or not.
 
 <h3>Specific Term</h3>
 * Payment - a payment for goods/services that store send to the recipient (customer).
 * Problem - a problem that broke an agreement of two stakeholders which is store and customer.
-note: It should have a standard for Problem term but it seem hard to create.
+---note: It should have a standard for Problem term but it seem hard to create.
 
 <h3>Use Cases</h3>
 1. Store send a payment to customer.
