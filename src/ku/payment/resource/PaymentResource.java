@@ -1,11 +1,15 @@
 package ku.payment.resource;
 
 import java.net.URI;
+
 import java.util.List;
+
+import org.json.*;
 
 import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -64,31 +68,71 @@ public class PaymentResource {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public Response getAllPayment() {
-		GenericEntity<List<PaymentTransaction>> list = convertToXML(paymentdao
-				.findAll());
+	public Response getAllPayment(@HeaderParam("Accept") String accept)
+			throws JSONException {
+
+		List<PaymentTransaction> p_list = paymentdao.findAll();
+
+		if (accept.equals("application/json")) {
+			JSONArray jsonArray = new JSONArray();
+
+			for (int i = 0; i < p_list.size(); i++) {
+				JSONObject json = new JSONObject();
+				JSONObject pay = new JSONObject(p_list.get(i));
+				json.put("payment", pay);
+				jsonArray.put(json);
+			}
+
+			return Response.ok().entity(jsonArray.toString()).build();
+		}
+
+		GenericEntity<List<PaymentTransaction>> list = convertToXML(p_list);
+
 		return Response.ok(list).build();
 	}
-	
+
 	@GET
 	@Path("{id: [1-9]\\d*}")
-	@Produces({MediaType.APPLICATION_XML,MediaType.APPLICATION_JSON}) 
-	public Response getPaymentById(@PathParam("id") long id) {
-		
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	public Response getPaymentById(@HeaderParam("Accept") String accept,
+			@PathParam("id") long id) throws JSONException {
+
 		PaymentTransaction payment = paymentdao.find(id);
-		
-		if( payment != null) {
+
+		if (payment != null) {
+
+			if (accept.equals("application/json")) {
+				JSONObject json = new JSONObject(payment);
+				return Response.ok(json.toString()).build();
+			}
+
 			return Response.ok(payment).build();
 		}
-		
+
 		return NOT_FOUND;
 	}
 
 	@GET
 	@Path("user/{id: [1-9]\\d*}")
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public Response getPaymentByUser(@PathParam("id") long id) {
+	public Response getPaymentByUser(@HeaderParam("Accept") String accept,
+			@PathParam("id") long id) throws JSONException {
 
+		List<PaymentTransaction> p_list = paymentdao.findByUser(id);
+		
+
+		if (accept.equals("application/json")) {
+			JSONArray jsonArray = new JSONArray();
+
+			for (int i = 0; i < p_list.size(); i++) {
+				JSONObject json = new JSONObject();
+				JSONObject pay = new JSONObject(p_list.get(i));
+				json.put("payment", pay);
+				jsonArray.put(json);
+			}
+
+			return Response.ok().entity(jsonArray.toString()).build();
+		}
 		GenericEntity<List<PaymentTransaction>> list = convertToXML(paymentdao
 				.findByUser(id));
 		
@@ -97,17 +141,29 @@ public class PaymentResource {
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public Response createPayment(JAXBElement<PaymentTransaction> element,
-			@Context UriInfo uriInfo) {
+	public Response createPayment(@HeaderParam("Content-Type") String ctype,
+			JAXBElement<PaymentTransaction> element ,@Context UriInfo uriInfo) {
+		
+		PaymentTransaction payment = null;
+		
+		if(ctype.equals("application/xml")) {
+			payment = element.getValue();
+		}
+		
+		if(ctype.equals("application/json")) {
+			
+		}
 
-		PaymentTransaction payment = element.getValue();
+		if (paymentdao.find(payment.getId()) != null) {
+			return CONFLICT;
+		}
 
-		if (payment == null)
-			return BAD_REQUEST;
-		URI uri = uriInfo.getAbsolutePathBuilder().path(payment.getId() + "")
-				.build();
-		paymentdao.save(payment);
-		return Response.created(uri).build();
+		if (paymentdao.save(payment)) {
+			URI uri = uriInfo.getAbsolutePathBuilder()
+					.path(payment.getId() + "").build();
+			return Response.created(uri).build();
+		}
+		return BAD_REQUEST;
 	}
 
 	@PUT
@@ -118,12 +174,12 @@ public class PaymentResource {
 			@Context UriInfo uriInfo, @Context Request req) {
 
 		PaymentTransaction payment = paymentdao.find(id);
-		
+
 		if (payment != null) {
-			
+
 			PaymentTransaction update = element.getValue();
 			update.setId(id);
-			
+
 			paymentdao.update(update);
 
 			URI uri = uriInfo.getAbsolutePath();

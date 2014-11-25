@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
+
 @Entity
 @Table(name = "PaymentTransaction")
 @XmlRootElement(name = "payment")
@@ -32,8 +33,8 @@ public class PaymentTransaction {
 
 	}
 
-	public PaymentTransaction(long recipientID, long senderID, double amount,String status,
-			String datetime) {
+	public PaymentTransaction(long recipientID, long senderID, double amount,
+			String status, String datetime) {
 		this.recipientID = recipientID;
 		this.senderID = senderID;
 		this.amount = amount;
@@ -99,19 +100,19 @@ public class PaymentTransaction {
 		if (update.getId() != 0 && update.getId() != this.getId())
 			throw new IllegalArgumentException(
 					"Update contact must have same id as contact to update");
-		
+
 		if (update.getRecipientID() != 0)
 			this.setRecipientID(update.getRecipientID());
-		
+
 		if (update.getSenderID() != 0)
 			this.setSenderID(update.getSenderID());
-		
+
 		if (update.getStatus() != null)
 			this.setStatus(update.getStatus());
-		
+
 		if (update.getAmount() > 0)
 			this.setAmount(update.getAmount());
-		
+
 		if (update.getDateTime() != null)
 			this.setDateTime(update.getDateTime());
 
