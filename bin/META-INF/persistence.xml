@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" 
+			 xmlns="http://java.sun.com/xml/ns/persistence" 
+			 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+			 xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+  
+  <!--  the name of the persistence unit must match name used when you create EntityManagerFactory -->
+  <persistence-unit name="paymentservice" transaction-type="RESOURCE_LOCAL">
+	<!-- we are using EclipseLink as the implementation of JPA -->
+	<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+	<!-- save objects from these Java classes -->
+	<class>ku.payment.entity.PaymentTransaction</class>
+	<!-- describe the database for JPA -->
+	<properties>
+		<property name="javax.persistence.jdbc.url" value="jdbc:derby:/tmp/contactdb;create=true" />
+		<property name="javax.persistence.jdbc.user" value="" />
+		<property name="javax.persistence.jdbc.password" value="" />
+		<property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver" />
+		<!-- this option tells EclipseLink to generate schema. Set to "none" to skip ddl generation. -->
+		<property name="eclipselink.ddl-generation" value="create-tables" />
+	</properties>
+</persistence-unit>
+</persistence>
