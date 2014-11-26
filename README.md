@@ -16,9 +16,21 @@ There is not include parts that use bank api to redeem money from this service o
 <br><b><i>note:</i></b> It should have a standard for Problem term but it seem hard to set it up.
 
 <h3>Use Cases</h3>
-1. Store send a payment to customer.
+1. Send a payment
+* Primary Actor: Store
+* Scope: Payment System
+* Level: Very High
+* Story: Store send a payment to customer.
 2. Customer accept a payment. (funds transferred)
+* Primary Actor: Customer
+* Scope: Payment System
+* Level: Very High
+* Story: Customer accept a payment then funds transferred to store. (payment completed)
 3. Customer reverse/chargeback a payment if problem occured.
+* Primary Actor: Customer
+* Scope: Payment System
+* Level: High
+* Story: Some problem occured. Customers want to refund their funds back. They go and try to reverse/rollback a payment.
 
 <h3>Functional Requirement</h3>
 1. Transaction history
