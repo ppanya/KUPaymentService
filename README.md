@@ -37,8 +37,8 @@ There is not include parts that use bank api to redeem money from this service o
 2. Current balance for each user.
 3. (Extra) Support multiple currency and multiple language
 
-<h3>API Specification</h3>
-<b><i>[link](https://docs.google.com/document/d/1AndOGXRR6K3h-zw_yxhqK6GgPK1ZZImVK7IjFj_BfzM/edit#) <i><b>
+<h3>[API Specification](https://github.com/maixezer/KUPaymentService/wiki/API-Specification)</h3>
+<b><i>[google's doc link](https://docs.google.com/document/d/1AndOGXRR6K3h-zw_yxhqK6GgPK1ZZImVK7IjFj_BfzM/edit#) <i><b>
 
 <h3>Reference</h3>
 This part is reference of my research through paypal system.
