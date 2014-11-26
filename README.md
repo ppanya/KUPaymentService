@@ -31,3 +31,8 @@ There is not include parts that use bank api to redeem money from this service o
 <h3>Reference</h3>
 This part is reference of my research through paypal system.
 I found this [link](https://www.paypal.com/cy/webapps/mpp/ua/servicedescription-full) is really helpful.
+
+<h2>Developer</h2>
+* Atit Lelasuksan 5510546201
+* Parinthorn Panya 5510546085
+* Wat Wattanagaroon 5510546140
