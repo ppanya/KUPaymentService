@@ -5,31 +5,31 @@ Payment Webservice, Service for payment from one user to other user. <br>
 There is not include parts that use bank api to redeem money from this service or deposite money to this service.
 
 <h3>Stakeholder</h3>
-* Store
+* Merchant
 * Customer
 * Payment System Admin
-<br><b><i>note:</i></b> I consider that store and customer is a different user type. But I still consider about customer to customer transaction, should this service support it or not.
+<br><b><i>note:</i></b> I consider that merchant and customer is a different user type. But I still consider about customer to customer transaction, should this service support it or not.
 
 <h3>Specific Term</h3>
-* Payment - a payment for goods/services that store send to the recipient (customer).
-* Problem - a problem that broke an agreement of two stakeholders which is store and customer.
+* Payment - a payment for goods/services that merchant send to the recipient (customer).
+* Problem - a problem that broke an agreement of two stakeholders which is merchant and customer.
 <br><b><i>note:</i></b> It should have a standard for Problem term but it seem hard to set it up.
 
 <h3>Use Cases</h3>
 1. Send a payment
-  * Primary Actor: Store
+  * Primary Actor: Merchant
   * Scope: Payment System
   * Level: Very High
-  * Story: Store send a payment to customer.
+  * Story: Merchant send a payment to customer.
 2. Accept a payment (funds transferred)
   * Primary Actor: Customer
   * Scope: Payment System
   * Level: Very High
-  * Story: Customer accept a payment then funds transferred to store. (payment completed)
+  * Story: Customer approve a payment then funds transferred to merchant. (payment completed)
 3. Reverse/chargeback a payment
   * Primary Actor: Customer
   * Scope: Payment System
-  * Level: High
+  * Level: Low
   * Story: Some problem occured. Customers want to refund their funds back. They go and try to reverse/rollback a payment.
 
 <h3>Functional Requirement</h3>
