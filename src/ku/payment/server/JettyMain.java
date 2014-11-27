@@ -154,8 +154,9 @@ public class JettyMain {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		ku.payment.service.DaoFactory.setFactory(new ku.payment.service.jpa.JpaDaoFactory());
-		ku.payment.service.DaoFactory.getInstance().loadFile();
+		
+//		ku.payment.service.DaoFactory.setFactory(new ku.payment.service.jpa.JpaDaoFactory());
+//		ku.payment.service.DaoFactory.getInstance().loadFile();
 		System.out.println("Server started.  Press ENTER to stop it.");
 
 		return server.getURI().toString();

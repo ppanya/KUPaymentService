@@ -40,5 +40,7 @@ public interface WalletDao {
 	 * @return true if the update is applied successfully.
 	 */
 	public abstract boolean update(Wallet update);
+
+	public abstract Wallet findByUser(long userID);
 	
 }

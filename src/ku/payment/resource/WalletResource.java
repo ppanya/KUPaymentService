@@ -1,10 +1,7 @@
 package ku.payment.resource;
 
 import java.net.URI;
-
 import java.util.List;
-
-import org.json.*;
 
 import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
@@ -24,18 +21,22 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 import javax.xml.bind.JAXBElement;
 
-import ku.payment.entity.*;
-import ku.payment.handler.PaymentHandler;
+import ku.payment.entity.Wallet;
+import ku.payment.entity.WalletTransaction;
+import ku.payment.handler.WalletHandler;
 
-@Path("/payment")
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+@Path("/wallet")
 @Singleton
-public class PaymentResource {
-
+public class WalletResource {
+	
 	@Context
 	UriInfo uriInfo;
-
-	private PaymentHandler handler;
-
+		
+	private WalletHandler handler;
 	private final Response NOT_FOUND = Response.status(Status.NOT_FOUND)
 			.build();
 	private final Response OK = Response.status(Status.OK).build();
@@ -49,17 +50,17 @@ public class PaymentResource {
 
 	private final Response NO_CONTENT = Response.status(Status.NO_CONTENT)
 			.build();
-
-	public PaymentResource(PaymentHandler handler) {
+		
+	public WalletResource(WalletHandler handler){
 		this.handler = handler;
 	}
-
+	
 	@GET
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public Response getAllPayment(@HeaderParam("Accept") String accept)
+	public Response getAllWallet(@HeaderParam("Accept") String accept)
 			throws JSONException {
 
-		List<PaymentTransaction> p_list = handler.getAllPayment();
+		List<Wallet> p_list = handler.getAllWallet();
 
 		if (accept.equals("application/json")) {
 			JSONArray jsonArray = new JSONArray();
@@ -74,27 +75,27 @@ public class PaymentResource {
 			return Response.ok().entity(jsonArray.toString()).build();
 		}
 
-		GenericEntity<List<PaymentTransaction>> list = convertToXML(p_list);
+		GenericEntity<List<Wallet>> list = convertToXML(p_list);
 
 		return Response.ok(list).build();
 	}
 
 	@GET
-	@Path("{id: [1-9]\\d*}")
+	@Path("/{id: [1-9]\\d*}")
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public Response getPaymentById(@HeaderParam("Accept") String accept,
+	public Response getWalletById(@HeaderParam("Accept") String accept,
 			@PathParam("id") long id) throws JSONException {
 
-		PaymentTransaction payment = handler.getPaymentByID(id);
+		Wallet wallet = handler.getWalletByID(id);
 
-		if (payment != null) {
+		if (wallet != null) {
 
 			if (accept.equals("application/json")) {
-				JSONObject json = new JSONObject(payment);
+				JSONObject json = new JSONObject(wallet);
 				return Response.ok(json.toString()).build();
 			}
 
-			return Response.ok(payment).build();
+			return Response.ok(wallet).build();
 		}
 	
 
@@ -102,49 +103,52 @@ public class PaymentResource {
 	}
 
 	@GET
-	@Path("user/{id: [1-9]\\d*}")
+	@Path("/user/{id: [1-9]\\d*}")
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public Response getPaymentByUser(@HeaderParam("Accept") String accept,
+	public Response getWalletByUser(@HeaderParam("Accept") String accept,
 			@PathParam("id") long userID) throws JSONException {
 
-		List<PaymentTransaction> p_list = handler.getPaymentByUser(userID);
+		Wallet wallet = handler.getWalletByuserID(userID);
 		
 
-		if (accept.equals("application/json")) {
-			JSONArray jsonArray = new JSONArray();
+		if (wallet != null) {
 
-			for (int i = 0; i < p_list.size(); i++) {
-				JSONObject json = new JSONObject();
-				JSONObject pay = new JSONObject(p_list.get(i));
-				json.put("payment", pay);
-				jsonArray.put(json);
+			if (accept.equals("application/json")) {
+				JSONObject json = new JSONObject(wallet);
+				return Response.ok(json.toString()).build();
 			}
 
-			return Response.ok().entity(jsonArray.toString()).build();
+			return Response.ok(wallet).build();
 		}
-		GenericEntity<List<PaymentTransaction>> list = convertToXML(p_list);
 		
-		return Response.ok(list).build();
+		return NOT_FOUND;
 	}
 
-	@POST
+	@PUT
 	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public Response createPayment(@HeaderParam("Content-Type") String ctype,
-			JAXBElement<PaymentTransaction> element ,@Context UriInfo uriInfo) {
+	public Response moneyTransfer(@HeaderParam("Content-Type") String ctype,
+			JAXBElement<WalletTransaction> element ,@Context UriInfo uriInfo) {
 		
-		PaymentTransaction payment = null;
+		WalletTransaction transaction = null;
 		
 		if(ctype.equals("application/xml")) {
-			payment = element.getValue();
+			transaction = element.getValue();
 		}
 	
-		if (handler.getPaymentByID(payment.getId()) != null) {
+		if (handler.getWalletByID(transaction.getWalletID()) != null) {
 			return CONFLICT;
 		}
-
-		if (handler.sendPayment(payment)) {
+		
+		long walletID = transaction.getWalletID();
+		if(handler.getWalletByID(walletID) != null) {
+			double amount = transaction.getAmount();
+			String transType = transaction.getTransactionType().toLowerCase();
+			if(transType=="deposit")
+				handler.depositMoney(walletID, amount);
+			else if(transType=="withdraw")
+				handler.withdrawMoney(walletID, amount);
 			URI uri = uriInfo.getAbsolutePathBuilder()
-					.path(payment.getId() + "").build();
+					.path(walletID + "").build();
 			return Response.created(uri).build();
 		}
 		return BAD_REQUEST;
@@ -154,39 +158,17 @@ public class PaymentResource {
 	@Path("accept/{id: [1-9]\\d*}")
 	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public Response acceptPayment(
-			JAXBElement<PaymentTransaction> element, @PathParam("id") long id,
+			JAXBElement<Wallet> element, @PathParam("id") long id,
 			@Context UriInfo uriInfo, @Context Request req) {
 
-		PaymentTransaction payment = handler.getPaymentByID(id);
+		Wallet payment = handler.getPaymentByID(id);
 
 		if (payment != null) {
 
-			PaymentTransaction update = element.getValue();
+			Wallet update = element.getValue();
 			update.setId(id);
 
 			handler.acceptPayment(update);
-
-			URI uri = uriInfo.getAbsolutePath();
-			return Response.ok(uri + "").build();
-		}
-
-		return NOT_FOUND;
-	}
-	
-	@PUT
-	@Path("reverse/{id: [1-9]\\d*}")
-	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public Response reversePayment(JAXBElement<PaymentTransaction> element, @PathParam("id") long id,
-			@Context UriInfo uriInfo, @Context Request req) {
-		
-		PaymentTransaction payment = handler.getPaymentByID(id);
-		
-		if (payment != null) {
-
-			PaymentTransaction update = element.getValue();
-			update.setId(id);
-
-			handler.reversePayment(update);
 
 			URI uri = uriInfo.getAbsolutePath();
 			return Response.ok(uri + "").build();
@@ -202,10 +184,9 @@ public class PaymentResource {
 	 *            List of Contact
 	 * @return GenericEntity List of Contact
 	 */
-	private GenericEntity<List<PaymentTransaction>> convertToXML(
-			List<PaymentTransaction> payment) {
-		return new GenericEntity<List<PaymentTransaction>>(payment) {
+	private GenericEntity<List<Wallet>> convertToXML(
+			List<Wallet> payment) {
+		return new GenericEntity<List<Wallet>>(payment) {
 		};
 	}
-
 }

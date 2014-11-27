@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
+import ku.payment.entity.PaymentTransaction;
 import ku.payment.entity.Wallet;
 import ku.payment.service.WalletDao;
 
@@ -28,6 +29,13 @@ public class JpaWalletDao implements WalletDao {
 	public List<Wallet> findAll() {
 		Query query = em.createQuery("SELECT c FROM Wallet c");
 		return query.getResultList();
+	}
+	
+	@Override
+	public Wallet findByUser(long userID){
+		Query query = em.createQuery("SELECT c FROM Wallet c WHERE c.ownerID = :userID");
+		query.setParameter("userID", userID);
+		return (Wallet) query.getSingleResult();
 	}
 
 	@Override
