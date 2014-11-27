@@ -15,12 +15,12 @@
 	<class>ku.payment.entity.WalletTransaction</class>
 	<!-- describe the database for JPA -->
 	<properties>
-		<property name="javax.persistence.jdbc.url" value="jdbc:derby:/tmp/contactdb;create=true" />
+		<property name="javax.persistence.jdbc.url" value="jdbc:derby:/tmp/kupayment" />
 		<property name="javax.persistence.jdbc.user" value="" />
 		<property name="javax.persistence.jdbc.password" value="" />
 		<property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver" />
 		<!-- this option tells EclipseLink to generate schema. Set to "none" to skip ddl generation. -->
-		<!-- <property name="eclipselink.ddl-generation" value="create-tables" /> -->
+		<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
 	</properties>
 </persistence-unit>
 </persistence>

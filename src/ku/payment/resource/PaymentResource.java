@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.json.*;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -56,6 +57,7 @@ public class PaymentResource {
 
 	@GET
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	@RolesAllowed({"user"})
 	public Response getAllPayment(@HeaderParam("Accept") String accept)
 			throws JSONException {
 
