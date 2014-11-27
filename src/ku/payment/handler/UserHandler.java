@@ -4,6 +4,7 @@ import java.util.List;
 
 import ku.payment.entity.User;
 import ku.payment.entity.Wallet;
+import ku.payment.service.DaoFactory;
 import ku.payment.service.UserDao;
 
 public class UserHandler {
@@ -11,9 +12,9 @@ public class UserHandler {
 	private UserDao userDao;
 	private WalletHandler w_handler;
 
-	public UserHandler(UserDao userDao , WalletHandler w_handler) {
-		this.userDao = userDao;
-		this.w_handler = w_handler;
+	public UserHandler() {
+		this.userDao = DaoFactory.getInstance().getUserDao();
+		this.w_handler = new WalletHandler();
 	}
 
 	public boolean createUser(User user) {

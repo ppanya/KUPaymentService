@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
-@Table(name = "WalletTransaction")
+@Table(name = "wallet_transaction")
 @XmlRootElement(name = "walletTransaction")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class WalletTransaction {

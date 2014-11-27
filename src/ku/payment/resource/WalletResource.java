@@ -32,10 +32,10 @@ import org.json.JSONObject;
 @Path("/wallet")
 @Singleton
 public class WalletResource {
-	
+
 	@Context
 	UriInfo uriInfo;
-		
+
 	private WalletHandler handler;
 	private final Response NOT_FOUND = Response.status(Status.NOT_FOUND)
 			.build();
@@ -50,11 +50,11 @@ public class WalletResource {
 
 	private final Response NO_CONTENT = Response.status(Status.NO_CONTENT)
 			.build();
-		
-	public WalletResource(WalletHandler handler){
-		this.handler = handler;
+
+	public WalletResource() {
+		this.handler = new WalletHandler();
 	}
-	
+
 	@GET
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public Response getAllWallet(@HeaderParam("Accept") String accept)
@@ -68,7 +68,7 @@ public class WalletResource {
 			for (int i = 0; i < p_list.size(); i++) {
 				JSONObject json = new JSONObject();
 				JSONObject pay = new JSONObject(p_list.get(i));
-				json.put("payment", pay);
+				json.put("wallet", pay);
 				jsonArray.put(json);
 			}
 
@@ -97,7 +97,6 @@ public class WalletResource {
 
 			return Response.ok(wallet).build();
 		}
-	
 
 		return NOT_FOUND;
 	}
@@ -109,7 +108,6 @@ public class WalletResource {
 			@PathParam("id") long userID) throws JSONException {
 
 		Wallet wallet = handler.getWalletByuserID(userID);
-		
 
 		if (wallet != null) {
 
@@ -120,61 +118,37 @@ public class WalletResource {
 
 			return Response.ok(wallet).build();
 		}
-		
+
 		return NOT_FOUND;
 	}
 
 	@PUT
 	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public Response moneyTransfer(@HeaderParam("Content-Type") String ctype,
-			JAXBElement<WalletTransaction> element ,@Context UriInfo uriInfo) {
-		
+			JAXBElement<WalletTransaction> element, @Context UriInfo uriInfo) {
+
 		WalletTransaction transaction = null;
-		
-		if(ctype.equals("application/xml")) {
+
+		if (ctype.equals("application/xml")) {
 			transaction = element.getValue();
 		}
-	
-		if (handler.getWalletByID(transaction.getWalletID()) != null) {
+
+		if (handler.getWalletByID(transaction.getWalletID()) == null) {
 			return CONFLICT;
 		}
-		
+
 		long walletID = transaction.getWalletID();
-		if(handler.getWalletByID(walletID) != null) {
+		if (handler.getWalletByID(walletID) != null) {
 			double amount = transaction.getAmount();
 			String transType = transaction.getTransactionType().toLowerCase();
-			if(transType=="deposit")
-				handler.depositMoney(walletID, amount);
-			else if(transType=="withdraw")
-				handler.withdrawMoney(walletID, amount);
-			URI uri = uriInfo.getAbsolutePathBuilder()
-					.path(walletID + "").build();
-			return Response.created(uri).build();
+			if (transType.equals("deposit")) {
+				handler.addMoney(walletID, amount);
+			} else if (transType.equals("withdraw"))
+				if(!handler.deductMoney(walletID, amount))
+					return BAD_REQUEST; //not enough money
+			return Response.ok().build();
 		}
 		return BAD_REQUEST;
-	}
-
-	@PUT
-	@Path("accept/{id: [1-9]\\d*}")
-	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public Response acceptPayment(
-			JAXBElement<Wallet> element, @PathParam("id") long id,
-			@Context UriInfo uriInfo, @Context Request req) {
-
-		Wallet payment = handler.getPaymentByID(id);
-
-		if (payment != null) {
-
-			Wallet update = element.getValue();
-			update.setId(id);
-
-			handler.acceptPayment(update);
-
-			URI uri = uriInfo.getAbsolutePath();
-			return Response.ok(uri + "").build();
-		}
-
-		return NOT_FOUND;
 	}
 
 	/**
@@ -184,8 +158,7 @@ public class WalletResource {
 	 *            List of Contact
 	 * @return GenericEntity List of Contact
 	 */
-	private GenericEntity<List<Wallet>> convertToXML(
-			List<Wallet> payment) {
+	private GenericEntity<List<Wallet>> convertToXML(List<Wallet> payment) {
 		return new GenericEntity<List<Wallet>>(payment) {
 		};
 	}

@@ -4,6 +4,7 @@ import java.util.List;
 
 import ku.payment.entity.PaymentTransaction;
 import ku.payment.entity.Wallet;
+import ku.payment.service.DaoFactory;
 import ku.payment.service.PaymentDao;
 import ku.payment.service.UserDao;
 import ku.payment.service.WalletDao;
@@ -14,9 +15,9 @@ public class PaymentHandler {
 	private PaymentDao payDao;
 	private WalletHandler walletHandler;
 
-	public PaymentHandler(PaymentDao payDao,WalletHandler walletHandler) {
-		this.payDao = payDao;
-		this.walletHandler = walletHandler;
+	public PaymentHandler() {
+		this.payDao = DaoFactory.getInstance().getPaymentDao();
+		this.walletHandler = new WalletHandler();
 	}
 
 	public boolean sendPayment(PaymentTransaction payment) {
@@ -48,7 +49,6 @@ public class PaymentHandler {
 		Wallet customer_wallet = walletHandler.getWalletByuserID(payment.getRecipientID());
 		Wallet merchant_wallet = walletHandler.getWalletByuserID(payment.getSenderID());
 		
-		double customer_cash = customer_wallet.getBalance();
 		double merchant_cash = merchant_wallet.getBalance();
 		double amount = payment.getAmount();
 		

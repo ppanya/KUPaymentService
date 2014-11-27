@@ -12,7 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 
 @Entity
-@Table(name = "PaymentTransaction")
+@Table(name = "paymentTransaction")
 @XmlRootElement(name = "payment")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class PaymentTransaction {

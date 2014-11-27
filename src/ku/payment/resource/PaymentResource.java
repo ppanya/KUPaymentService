@@ -50,8 +50,8 @@ public class PaymentResource {
 	private final Response NO_CONTENT = Response.status(Status.NO_CONTENT)
 			.build();
 
-	public PaymentResource(PaymentHandler handler) {
-		this.handler = handler;
+	public PaymentResource() {
+		this.handler = new PaymentHandler();
 	}
 
 	@GET

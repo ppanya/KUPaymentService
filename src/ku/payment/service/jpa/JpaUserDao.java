@@ -1,5 +1,6 @@
 package ku.payment.service.jpa;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -29,6 +30,7 @@ public class JpaUserDao implements UserDao {
 	public List<User> findAll() {
 		Query query = em.createQuery("SELECT c FROM User c");
 		return query.getResultList();
+//		return new ArrayList<User>();
 	}
 
 	@Override

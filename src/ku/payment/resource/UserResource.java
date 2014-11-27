@@ -50,8 +50,8 @@ public class UserResource {
 	private final Response NO_CONTENT = Response.status(Status.NO_CONTENT)
 			.build();
 
-	public UserResource(UserHandler handler) {
-		this.handler = handler;
+	public UserResource() {
+		this.handler = new UserHandler();
 	}
 
 	@GET
@@ -67,7 +67,7 @@ public class UserResource {
 			for (int i = 0; i < u_list.size(); i++) {
 				JSONObject json = new JSONObject();
 				JSONObject pay = new JSONObject(u_list.get(i));
-				json.put("payment", pay);
+				json.put("user", pay);
 				jsonArray.put(json);
 			}
 

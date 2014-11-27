@@ -3,14 +3,15 @@ package ku.payment.handler;
 import java.util.List;
 
 import ku.payment.entity.Wallet;
+import ku.payment.service.DaoFactory;
 import ku.payment.service.WalletDao;
 
 public class WalletHandler {
 
 	private WalletDao walletDao;
 
-	public WalletHandler(WalletDao walletDao) {
-		this.walletDao = walletDao;
+	public WalletHandler() {
+		this.walletDao = DaoFactory.getInstance().getWalletDao();
 	}
 
 	public boolean createWallet(long userID) {
@@ -32,6 +33,7 @@ public class WalletHandler {
 			return false;
 		Wallet wallet = walletDao.find(walletID);
 		double balance = wallet.getBalance();
+		if(balance<amount) return false;
 		wallet.setBalance(balance - amount);
 		return walletDao.update(wallet);
 	}

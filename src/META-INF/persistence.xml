@@ -10,6 +10,9 @@
 	<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 	<!-- save objects from these Java classes -->
 	<class>ku.payment.entity.PaymentTransaction</class>
+	<class>ku.payment.entity.User</class>
+	<class>ku.payment.entity.Wallet</class>
+	<class>ku.payment.entity.WalletTransaction</class>
 	<!-- describe the database for JPA -->
 	<properties>
 		<property name="javax.persistence.jdbc.url" value="jdbc:derby:/tmp/contactdb;create=true" />
@@ -17,7 +20,7 @@
 		<property name="javax.persistence.jdbc.password" value="" />
 		<property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver" />
 		<!-- this option tells EclipseLink to generate schema. Set to "none" to skip ddl generation. -->
-		<property name="eclipselink.ddl-generation" value="create-tables" />
+		<!-- <property name="eclipselink.ddl-generation" value="create-tables" /> -->
 	</properties>
 </persistence-unit>
 </persistence>

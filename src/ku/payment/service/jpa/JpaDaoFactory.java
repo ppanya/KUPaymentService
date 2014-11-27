@@ -24,6 +24,10 @@ public class JpaDaoFactory extends DaoFactory {
 
 	private final EntityManagerFactory emf;
 	private EntityManager em;
+//	private EntityManager paymentEm;
+//	private EntityManager userEm;
+//	private EntityManager walletEm;
+//	private EntityManager walletTransEm;
 	private static Logger logger;
 
 	static {
@@ -37,6 +41,14 @@ public class JpaDaoFactory extends DaoFactory {
 		userDao = new JpaUserDao(em);
 		walletDao = new JpaWalletDao(em);
 		walletTransactionDao = new JpaWalletTransactionDao(em);
+//		paymentEm = emf.createEntityManager();
+//		userEm = emf.createEntityManager();
+//		walletEm = emf.createEntityManager();
+//		walletTransEm = emf.createEntityManager();
+//		paymentDao = new JpaPaymentDao(paymentEm);
+//		userDao = new JpaUserDao(userEm);
+//		walletDao = new JpaWalletDao(walletEm);
+//		walletTransactionDao = new JpaWalletTransactionDao(walletTransEm);
 	}
 
 	public PaymentDao getPaymentDao() {
@@ -61,8 +73,16 @@ public class JpaDaoFactory extends DaoFactory {
 	@Override
 	public void shutdown() {
 		try {
-			if (em != null && em.isOpen())
+			if( em != null && em.isOpen()) 
 				em.close();
+//			if (paymentEm != null && paymentEm.isOpen())
+//				paymentEm.close();
+//			if (userEm != null && userEm.isOpen())
+//				userEm.close();
+//			if (walletEm != null && walletEm.isOpen())
+//				walletEm.close();
+//			if (walletTransEm != null && walletTransEm.isOpen())
+//				walletTransEm.close();
 			if (emf != null && emf.isOpen())
 				emf.close();
 		} catch (IllegalStateException ex) {
