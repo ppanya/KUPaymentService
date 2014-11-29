@@ -21,6 +21,12 @@ public interface UserDao {
 	 */
 	public abstract boolean delete(long id);
 
+	
+	public abstract List<String> findAllUsername();
+	
+	
+	public abstract long findIDFromUsername(String username);
+	
 	/**
 	 * Save or replace a contact.
 	 * If the contact.id is 0 then it is assumed to be a

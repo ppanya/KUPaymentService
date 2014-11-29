@@ -51,6 +51,14 @@ public class UserHandler {
 	public User getUserByID(long userID) {
 		return userDao.find(userID);
 	}
+	
+	public List<String> getAllusername(){
+		return userDao.findAllUsername();
+	}
+	
+	public long getUserIDFromUsername(String username) {
+		return userDao.findIDFromUsername(username);
+	}
 
 	private boolean isUserExist(User user) {
 		if (userDao.find(user.getId()) != null)

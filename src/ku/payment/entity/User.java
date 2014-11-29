@@ -1,14 +1,17 @@
 package ku.payment.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @Table(name = "Users")
@@ -22,25 +25,32 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@XmlAttribute
 	private long id;
+//	@XmlTransient
+	private String username;
+//	@XmlTransient
+	private String password;
+	
 	private String firstName;
 	private String lastName;
 	private String dob;
 	private String address;
 	private String phone;
 	private String email;
-
+	
 	public User() {
 
 	}
 
 	public User(String firstName, String lastName, String dob, String address,
-			String phone, String email) {
+			String phone, String email, String username, String password) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.dob = dob;
 		this.address = address;
 		this.phone = phone;
 		this.email = email;
+		this.username = username;
+		this.password = password;
 	}
 
 	public User(long id) {
@@ -102,4 +112,22 @@ public class User {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
+	
 }

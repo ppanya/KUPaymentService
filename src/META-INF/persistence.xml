@@ -15,12 +15,28 @@
 	<class>ku.payment.entity.WalletTransaction</class>
 	<!-- describe the database for JPA -->
 	<properties>
-		<property name="javax.persistence.jdbc.url" value="jdbc:derby:/tmp/kupayment" />
-		<property name="javax.persistence.jdbc.user" value="" />
-		<property name="javax.persistence.jdbc.password" value="" />
-		<property name="javax.persistence.jdbc.driver" value="org.apache.derby.jdbc.EmbeddedDriver" />
+		<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/kupaypal" />
+		<property name="javax.persistence.jdbc.user" value="root" />
+		<property name="javax.persistence.jdbc.password" value="maixezer" />
+		<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
 		<!-- this option tells EclipseLink to generate schema. Set to "none" to skip ddl generation. -->
+		<!-- <property name="eclipselink.ddl-generation" value="drop-and-create-tables" /> -->
+	</properties>
+	</persistence-unit>
+	
+	<!-- <persistence-unit name="login" transaction-type="RESOURCE_LOCAL">
+	we are using EclipseLink as the implementation of JPA
+	<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+	save objects from these Java classes
+	<class>ku.payment.entity.LoginUser</class>
+	describe the database for JPA
+	<properties>
+		<property name="javax.persistence.jdbc.url" value="jdbc:mysql:128.199.212.108:3306;create=true" />
+		<property name="javax.persistence.jdbc.user" value="root" />
+		<property name="javax.persistence.jdbc.password" value="jforceza" />
+		<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />
+		this option tells EclipseLink to generate schema. Set to "none" to skip ddl generation.
 		<property name="eclipselink.ddl-generation" value="create-tables" />
 	</properties>
-</persistence-unit>
+	</persistence-unit> -->
 </persistence>

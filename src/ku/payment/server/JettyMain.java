@@ -4,9 +4,10 @@ import java.io.IOException;
 
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
-import org.eclipse.jetty.security.HashLoginService;
+import org.eclipse.jetty.security.JDBCLoginService;
 import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.security.authentication.BasicAuthenticator;
+import org.eclipse.jetty.security.authentication.DigestAuthenticator;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -172,8 +173,14 @@ public class JettyMain {
 
 	public static Handler getSecurityHandler(ServletContextHandler context) {
 		// params to LoginService are realm name and properties file.
-		LoginService loginService = new HashLoginService("myrealm",
-				"src/myrealm.properties");
+		LoginService loginService = null;
+		try {
+			loginService = new JDBCLoginService("realm",
+					"src/JDBCUserRealm.properties");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		server.addBean(loginService);
 		Constraint constraint = new Constraint();
 		constraint.setName("auth");
@@ -192,8 +199,10 @@ public class JettyMain {
 		// setConstraintMappings requires an array or List as argument
 		securityHandler
 				.setConstraintMappings(new ConstraintMapping[] { mapping });
-		securityHandler.setAuthenticator(new BasicAuthenticator());
+
+		securityHandler.setAuthenticator(new DigestAuthenticator());
 		securityHandler.setLoginService(loginService);
+
 		// finally: wrap the parameter (Handler) in securityHandler
 		securityHandler.setHandler(context);
 		return securityHandler;
