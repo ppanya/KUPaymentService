@@ -40,6 +40,7 @@ public abstract class DaoFactory {
 	public abstract WalletDao getWalletDao();
 
 	public abstract WalletTransactionDao getWalletTransactionDao();
+
 	
 	/**
 	 * Shutdown all persistence services.

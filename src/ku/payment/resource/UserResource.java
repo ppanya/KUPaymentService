@@ -3,6 +3,8 @@ package ku.payment.resource;
 import java.net.URI;
 import java.util.List;
 
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -55,6 +57,7 @@ public class UserResource {
 	}
 
 	@GET
+	@RolesAllowed({"admin"})
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public Response getAllUser(@HeaderParam("Accept") String accept)
 			throws JSONException {
@@ -81,6 +84,7 @@ public class UserResource {
 
 	@GET
 	@Path("/{id: [1-9]\\d*}")
+	@RolesAllowed({"admin"})
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public Response getUserById(@HeaderParam("Accept") String accept,
 			@PathParam("id") long id) throws JSONException {
@@ -104,14 +108,16 @@ public class UserResource {
 	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public Response createUser(@HeaderParam("Content-Type") String ctype,
 			JAXBElement<User> element, @Context UriInfo uriInfo) {
-
+		
+		List<String> u_list = handler.getAllusername();
+		
 		User user = null;
 
 		if (ctype.equals("application/xml")) {
 			user = element.getValue();
 		}
 
-		if (handler.getUserByID(user.getId()) != null) {
+		if (handler.getUserByID(user.getId()) != null || u_list.contains(user.getUsername())) {
 			return CONFLICT;
 		}
 
@@ -125,6 +131,7 @@ public class UserResource {
 
 	@PUT
 	@Path("/{id: [1-9]\\d*}")
+	@PermitAll
 	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public Response updateUser(JAXBElement<User> element,
 			@PathParam("id") long id, @Context UriInfo uriInfo,

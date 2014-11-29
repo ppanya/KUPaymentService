@@ -12,15 +12,14 @@ import javax.persistence.Query;
 import ku.payment.entity.User;
 import ku.payment.service.UserDao;
 
-
 public class JpaUserDao implements UserDao {
-	
+
 	private final EntityManager em;
-	
-	public JpaUserDao (EntityManager em) {
+
+	public JpaUserDao(EntityManager em) {
 		this.em = em;
 	}
-	
+
 	@Override
 	public User find(long id) {
 		return em.find(User.class, id);
@@ -30,7 +29,7 @@ public class JpaUserDao implements UserDao {
 	public List<User> findAll() {
 		Query query = em.createQuery("SELECT c FROM User c");
 		return query.getResultList();
-//		return new ArrayList<User>();
+		// return new ArrayList<User>();
 	}
 
 	@Override
@@ -64,7 +63,12 @@ public class JpaUserDao implements UserDao {
 		try {
 			tx.begin();
 			em.persist(user);
+			Query query = em.createNativeQuery("INSERT INTO user_roles values (?,?)");
+			query.setParameter(1, user.getId());
+			query.setParameter(2, 2);
+			query.executeUpdate();
 			tx.commit();
+			
 			return true;
 		} catch (EntityExistsException ex) {
 			Logger.getLogger(this.getClass().getName())
@@ -103,6 +107,19 @@ public class JpaUserDao implements UserDao {
 		}
 	}
 
-	
+	@Override
+	public List<String> findAllUsername() {
+		Query query = em.createQuery("SELECT c.username FROM User c");
+		return query.getResultList();
+	}
+
+	@Override
+	public long findIDFromUsername(String username) {
+		Query query = em.createQuery("SELECT c.id FROM User c WHERE c.username = :username" );
+		query.setParameter("username", username);
+		List<Long> list = query.getResultList();
+		if(list.size()==1) return list.get(0);
+		return -1;
+	}
 
 }

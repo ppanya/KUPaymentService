@@ -2,11 +2,18 @@ package ku.payment.server;
 
 import java.io.IOException;
 
+import org.eclipse.jetty.security.ConstraintMapping;
+import org.eclipse.jetty.security.ConstraintSecurityHandler;
+import org.eclipse.jetty.security.JDBCLoginService;
+import org.eclipse.jetty.security.LoginService;
+import org.eclipse.jetty.security.authentication.BasicAuthenticator;
+import org.eclipse.jetty.security.authentication.DigestAuthenticator;
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.util.security.Constraint;
 import org.glassfish.jersey.server.ServerProperties;
-
 
 /**
  * <p>
@@ -146,7 +153,8 @@ public class JettyMain {
 		context.addServlet(holder, "/*");
 
 		// (5) Add the context (our application) to the Jetty server.
-		server.setHandler(context);
+		server.setHandler(getSecurityHandler(context));
+//		server.setHandler(context);
 		System.out.println("Starting Jetty server on port " + port);
 		try {
 			server.start();
@@ -154,13 +162,50 @@ public class JettyMain {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-//		ku.payment.service.DaoFactory.setFactory(new ku.payment.service.jpa.JpaDaoFactory());
-//		ku.payment.service.DaoFactory.getInstance().loadFile();
+
+		// ku.payment.service.DaoFactory.setFactory(new
+		// ku.payment.service.jpa.JpaDaoFactory());
+		// ku.payment.service.DaoFactory.getInstance().loadFile();
 		System.out.println("Server started.  Press ENTER to stop it.");
 
 		return server.getURI().toString();
+	}
+
+	public static Handler getSecurityHandler(ServletContextHandler context) {
+		// params to LoginService are realm name and properties file.
+		LoginService loginService = null;
+		try {
+			loginService = new JDBCLoginService("realm",
+					"src/JDBCUserRealm.properties");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		server.addBean(loginService);
+		Constraint constraint = new Constraint();
+		constraint.setName("auth");
+		constraint.setAuthenticate(true);
+		// Only allow users that have these roles.
+		// It is more appropriate to specify this in the resource // itself
+		// using annotations.
+		// But if I comment this out, Jetty returns 403 Forbidden // instead of
+		// 401 Unauthorized.
+		constraint.setRoles(new String[] { "user", "admin" });
+		// A mapping of resource paths to constraints
+		ConstraintMapping mapping = new ConstraintMapping();
+		mapping.setPathSpec("/*");
+		mapping.setConstraint(constraint);
+		ConstraintSecurityHandler securityHandler = new ConstraintSecurityHandler();
+		// setConstraintMappings requires an array or List as argument
+		securityHandler
+				.setConstraintMappings(new ConstraintMapping[] { mapping });
+
+		securityHandler.setAuthenticator(new DigestAuthenticator());
+		securityHandler.setLoginService(loginService);
+
+		// finally: wrap the parameter (Handler) in securityHandler
+		securityHandler.setHandler(context);
+		return securityHandler;
 	}
 
 	/**

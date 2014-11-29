@@ -1,7 +1,7 @@
 ----------------------------------------------------------------
-Thu Nov 27 16:25:22 ICT 2014:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.11.1.1 - (1616546): instance a816c00e-0149-f091-b997-000005da2db0 
-on database directory /private/tmp/contactdb with class loader sun.misc.Launcher$AppClassLoader@67d479cf 
+Sat Nov 29 16:14:44 ICT 2014:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.11.1.1 - (1616546): instance a816c00e-0149-fad4-b4ce-000005b33000 
+on database directory /private/tmp/kupayment with class loader sun.misc.Launcher$AppClassLoader@67d479cf 
 Loaded from file:/Users/MaiiZ/KUPaymentService/lib/derby.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.7.0_71-b14
