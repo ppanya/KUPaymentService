@@ -177,6 +177,24 @@ public class PaymentResource {
 		return BAD_REQUEST;
 	}
 
+	@GET
+	@Path("login")
+	@PermitAll
+	public Response login(@Context UriInfo uriInfo, @Context HttpHeaders headers) {
+
+		String username = extractUsernameFromHeaders(headers);
+
+		User user = user_handler.getUserByUsername(username);
+
+		if (user != null) {
+			long id = user.getId();
+			URI uri = uriInfo.getBaseUri();
+			return Response.ok(uri + RESOURCE_NAME + id).build();
+		}
+		
+		return NOT_FOUND;
+	}
+
 	@PUT
 	@Path("accept/{id: [1-9]\\d*}")
 	@PermitAll
@@ -190,7 +208,7 @@ public class PaymentResource {
 			PaymentTransaction update = handler.getPaymentByID(id);
 			if (!update.getStatus().toLowerCase().equals(PENDING_STATUS))
 				return CONFLICT;
-			
+
 			handler.acceptPayment(update);
 
 			URI uri = uriInfo.getBaseUri();
