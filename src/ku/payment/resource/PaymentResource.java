@@ -43,6 +43,9 @@ public class PaymentResource {
 
 	private PaymentHandler handler;
 	private UserHandler user_handler;
+	private final String RESOURCE_NAME = "payment/";
+	private final String PENDING_STATUS = "pending";
+	private final String SUCCESS_STATUS = "success";
 	private final String RECIPIENT = "recipient";
 	private final String SENDER = "sender";
 	private final String BOTH = "both";
@@ -121,10 +124,11 @@ public class PaymentResource {
 	@PermitAll
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public Response getPaymentByUser(@HeaderParam("Accept") String accept,
-			@PathParam("username") String username, @Context HttpHeaders httpHeaders)
-			throws JSONException {
+			@PathParam("username") String username,
+			@Context HttpHeaders httpHeaders) throws JSONException {
 
-		String header_username = extractUsernameFromHeaders(httpHeaders).toLowerCase();
+		String header_username = extractUsernameFromHeaders(httpHeaders)
+				.toLowerCase();
 		if (header_username.equals(username.toLowerCase())) {
 			long userID = user_handler.getUserIDFromUsername(username);
 			List<PaymentTransaction> p_list = handler.getPaymentByUser(userID);
@@ -177,23 +181,20 @@ public class PaymentResource {
 	@Path("accept/{id: [1-9]\\d*}")
 	@PermitAll
 	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public Response acceptPayment(@PathParam("id") long id, @Context UriInfo uriInfo,
-			@Context Request req, @Context HttpHeaders httpHeaders) {
-
-		MultivaluedMap<String, String> map = httpHeaders.getRequestHeaders();
-		Set<String> set = map.keySet();
-		for (String s : set) {
-			System.out.printf("Key: %s, Value: %s.\n", s, map.get(s));
-		}
+	public Response acceptPayment(@PathParam("id") long id,
+			@Context UriInfo uriInfo, @Context Request req,
+			@Context HttpHeaders httpHeaders) {
 
 		if (isUserRelatetoPayment(httpHeaders, id, RECIPIENT)) {
 
 			PaymentTransaction update = handler.getPaymentByID(id);
-
+			if (!update.getStatus().toLowerCase().equals(PENDING_STATUS))
+				return CONFLICT;
+			
 			handler.acceptPayment(update);
 
-			URI uri = uriInfo.getAbsolutePath();
-			return Response.ok(uri + "").build();
+			URI uri = uriInfo.getBaseUri();
+			return Response.ok(uri + RESOURCE_NAME + id).build();
 		}
 
 		return NOT_FOUND;
@@ -203,17 +204,19 @@ public class PaymentResource {
 	@Path("reverse/{id: [1-9]\\d*}")
 	@PermitAll
 	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public Response reversePayment(@PathParam("id") long id, @Context UriInfo uriInfo,
-			@Context Request req, @Context HttpHeaders httpHeaders) {
+	public Response reversePayment(@PathParam("id") long id,
+			@Context UriInfo uriInfo, @Context Request req,
+			@Context HttpHeaders httpHeaders) {
 
 		if (isUserRelatetoPayment(httpHeaders, id, BOTH)) {
 
 			PaymentTransaction update = handler.getPaymentByID(id);
-			
+			if (!update.getStatus().toLowerCase().equals(SUCCESS_STATUS))
+				return CONFLICT;
 			handler.reversePayment(update);
 
-			URI uri = uriInfo.getAbsolutePath();
-			return Response.ok(uri + "").build();
+			URI uri = uriInfo.getBaseUri();
+			return Response.ok(uri + RESOURCE_NAME + id).build();
 		}
 
 		return NOT_FOUND;
