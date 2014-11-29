@@ -2,6 +2,8 @@ package ku.payment.server;
 
 import java.io.IOException;
 
+import ku.payment.resource.PaymentApplication;
+
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.JDBCLoginService;
@@ -14,6 +16,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.security.Constraint;
 import org.glassfish.jersey.server.ServerProperties;
+import org.glassfish.jersey.servlet.ServletProperties;
 
 /**
  * <p>
@@ -148,8 +151,8 @@ public class JettyMain {
 		// This initialization parameter tells Jersey to auto-configure all
 		// resource classes
 		// in the named package(s).
-		holder.setInitParameter(ServerProperties.PROVIDER_PACKAGES,
-				"ku.payment.resource");
+		holder.setInitParameter(ServletProperties.JAXRS_APPLICATION_CLASS,
+				PaymentApplication.class.getName());
 		context.addServlet(holder, "/*");
 
 		// (5) Add the context (our application) to the Jetty server.

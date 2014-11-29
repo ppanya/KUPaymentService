@@ -24,6 +24,7 @@ public interface UserDao {
 	
 	public abstract List<String> findAllUsername();
 	
+	public abstract User find(String username);
 	
 	public abstract long findIDFromUsername(String username);
 	

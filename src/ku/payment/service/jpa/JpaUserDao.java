@@ -122,4 +122,13 @@ public class JpaUserDao implements UserDao {
 		return -1;
 	}
 
+	@Override
+	public User find(String username) {
+		Query query = em.createQuery("SELECT c FROM User c WHERE c.username = :username" );
+		query.setParameter("username", username);
+		List<User> list = query.getResultList();
+		if(list.size()==1) return list.get(0);
+		return null;
+	}
+
 }

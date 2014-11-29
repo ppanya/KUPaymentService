@@ -9,6 +9,7 @@ import org.json.*;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
+import javax.annotation.security.RunAs;
 import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -116,15 +117,16 @@ public class PaymentResource {
 	}
 
 	@GET
-	@Path("user/{id: [1-9]\\d*}")
+	@Path("user/{username}")
 	@PermitAll
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public Response getPaymentByUser(@HeaderParam("Accept") String accept,
-			@PathParam("id") long userID, @Context HttpHeaders httpHeaders)
+			@PathParam("username") String username, @Context HttpHeaders httpHeaders)
 			throws JSONException {
 
-		if (isSameUser(httpHeaders, userID)) {
-
+		String header_username = extractUsernameFromHeaders(httpHeaders).toLowerCase();
+		if (header_username.equals(username.toLowerCase())) {
+			long userID = user_handler.getUserIDFromUsername(username);
 			List<PaymentTransaction> p_list = handler.getPaymentByUser(userID);
 
 			if (p_list.size() == 0)
@@ -155,20 +157,18 @@ public class PaymentResource {
 	public Response createPayment(@HeaderParam("Content-Type") String ctype,
 			JAXBElement<PaymentTransaction> element, @Context UriInfo uriInfo) {
 
-		PaymentTransaction payment = null;
+		PaymentTransaction payment = element.getValue();
 
-		if (ctype.equals("application/xml")) {
-			payment = element.getValue();
-		}
+		if (payment != null) {
+			if (handler.getPaymentByID(payment.getId()) != null) {
+				return CONFLICT;
+			}
 
-		if (handler.getPaymentByID(payment.getId()) != null) {
-			return CONFLICT;
-		}
-
-		if (handler.sendPayment(payment)) {
-			URI uri = uriInfo.getAbsolutePathBuilder()
-					.path(payment.getId() + "").build();
-			return Response.created(uri).build();
+			if (handler.sendPayment(payment)) {
+				URI uri = uriInfo.getAbsolutePathBuilder()
+						.path(payment.getId() + "").build();
+				return Response.created(uri).build();
+			}
 		}
 		return BAD_REQUEST;
 	}
@@ -177,8 +177,7 @@ public class PaymentResource {
 	@Path("accept/{id: [1-9]\\d*}")
 	@PermitAll
 	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public Response acceptPayment(JAXBElement<PaymentTransaction> element,
-			@PathParam("id") long id, @Context UriInfo uriInfo,
+	public Response acceptPayment(@PathParam("id") long id, @Context UriInfo uriInfo,
 			@Context Request req, @Context HttpHeaders httpHeaders) {
 
 		MultivaluedMap<String, String> map = httpHeaders.getRequestHeaders();
@@ -189,8 +188,7 @@ public class PaymentResource {
 
 		if (isUserRelatetoPayment(httpHeaders, id, RECIPIENT)) {
 
-			PaymentTransaction update = element.getValue();
-			update.setId(id);
+			PaymentTransaction update = handler.getPaymentByID(id);
 
 			handler.acceptPayment(update);
 
@@ -205,15 +203,13 @@ public class PaymentResource {
 	@Path("reverse/{id: [1-9]\\d*}")
 	@PermitAll
 	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public Response reversePayment(JAXBElement<PaymentTransaction> element,
-			@PathParam("id") long id, @Context UriInfo uriInfo,
+	public Response reversePayment(@PathParam("id") long id, @Context UriInfo uriInfo,
 			@Context Request req, @Context HttpHeaders httpHeaders) {
 
 		if (isUserRelatetoPayment(httpHeaders, id, BOTH)) {
 
-			PaymentTransaction update = element.getValue();
-			update.setId(id);
-
+			PaymentTransaction update = handler.getPaymentByID(id);
+			
 			handler.reversePayment(update);
 
 			URI uri = uriInfo.getAbsolutePath();
@@ -255,7 +251,7 @@ public class PaymentResource {
 		condition = condition.toLowerCase();
 		long recID = payment.getRecipientID();
 		long senderID = payment.getSenderID();
-		
+
 		if (condition.equals(RECIPIENT))
 			return recID == userID;
 		else if (condition.equals(SENDER))

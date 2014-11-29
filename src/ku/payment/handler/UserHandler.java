@@ -60,6 +60,10 @@ public class UserHandler {
 		return userDao.findIDFromUsername(username);
 	}
 
+	public User getUserByUsername(String username) {
+		return userDao.find(username);
+	}
+	
 	private boolean isUserExist(User user) {
 		if (userDao.find(user.getId()) != null)
 			return false;
