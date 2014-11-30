@@ -21,6 +21,7 @@ public class PaymentHandler {
 	}
 
 	public boolean sendPayment(PaymentTransaction payment) {
+		payment.setStatus("Pending");
 		return payDao.save(payment);
 	}
 

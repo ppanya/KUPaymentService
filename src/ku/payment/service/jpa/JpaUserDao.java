@@ -123,9 +123,15 @@ public class JpaUserDao implements UserDao {
 	}
 
 	@Override
+<<<<<<< HEAD
 	public User find(String email) {
 		Query query = em.createQuery("SELECT c FROM User c WHERE c.email = :email" );
 		query.setParameter("email", email);
+=======
+	public User find(String username) {
+		Query query = em.createQuery("SELECT c FROM User c WHERE c.username = :username" );
+		query.setParameter("username", username);
+>>>>>>> 9ab378beb5128b497e9bdc3707d9f561e592ef0d
 		List<User> list = query.getResultList();
 		if(list.size()==1) return list.get(0);
 		return null;

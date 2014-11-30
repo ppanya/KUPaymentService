@@ -24,7 +24,11 @@ public interface UserDao {
 	
 	public abstract List<String> findAllEmail();
 	
+<<<<<<< HEAD
 	public abstract User find(String email);
+=======
+	public abstract User find(String username);
+>>>>>>> 9ab378beb5128b497e9bdc3707d9f561e592ef0d
 	
 	public abstract long findIDFromEmail(String email);
 	

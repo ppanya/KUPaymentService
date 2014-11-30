@@ -3,6 +3,7 @@ package ku.payment.resource;
 import java.net.URI;
 import java.util.List;
 
+import javax.annotation.security.RolesAllowed;
 import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -14,6 +15,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
@@ -23,6 +25,7 @@ import javax.xml.bind.JAXBElement;
 
 import ku.payment.entity.Wallet;
 import ku.payment.entity.WalletTransaction;
+import ku.payment.handler.UserHandler;
 import ku.payment.handler.WalletHandler;
 
 import org.json.JSONArray;
@@ -37,6 +40,7 @@ public class WalletResource {
 	UriInfo uriInfo;
 
 	private WalletHandler handler;
+	private UserHandler user_handler;
 	private final Response NOT_FOUND = Response.status(Status.NOT_FOUND)
 			.build();
 	private final Response OK = Response.status(Status.OK).build();
@@ -53,9 +57,11 @@ public class WalletResource {
 
 	public WalletResource() {
 		this.handler = new WalletHandler();
+		this.user_handler = new UserHandler();
 	}
 
 	@GET
+	@RolesAllowed({ "admin" })
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public Response getAllWallet(@HeaderParam("Accept") String accept)
 			throws JSONException {
@@ -82,14 +88,14 @@ public class WalletResource {
 
 	@GET
 	@Path("/{id: [1-9]\\d*}")
+	@RolesAllowed({ "user" })
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public Response getWalletById(@HeaderParam("Accept") String accept,
-			@PathParam("id") long id) throws JSONException {
+			@PathParam("id") long id, @Context HttpHeaders headers)
+			throws JSONException {
 
-		Wallet wallet = handler.getWalletByID(id);
-
-		if (wallet != null) {
-
+		if (isSameUser(headers, id)) {
+			Wallet wallet = handler.getWalletByID(id);
 			if (accept.equals("application/json")) {
 				JSONObject json = new JSONObject(wallet);
 				return Response.ok(json.toString()).build();
@@ -103,14 +109,14 @@ public class WalletResource {
 
 	@GET
 	@Path("/user/{id: [1-9]\\d*}")
+	@RolesAllowed({ "user" })
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public Response getWalletByUser(@HeaderParam("Accept") String accept,
-			@PathParam("id") long userID) throws JSONException {
+			@PathParam("id") long userID, @Context HttpHeaders headers)
+			throws JSONException {
 
-		Wallet wallet = handler.getWalletByuserID(userID);
-
-		if (wallet != null) {
-
+		if (isSameUser(headers, userID)) {
+			Wallet wallet = handler.getWalletByuserID(userID);
 			if (accept.equals("application/json")) {
 				JSONObject json = new JSONObject(wallet);
 				return Response.ok(json.toString()).build();
@@ -123,20 +129,44 @@ public class WalletResource {
 	}
 
 	@PUT
+	@RolesAllowed({ "user" })
 	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public Response moneyTransfer(@HeaderParam("Content-Type") String ctype,
-			JAXBElement<WalletTransaction> element, @Context UriInfo uriInfo) {
+			JAXBElement<WalletTransaction> element, @Context UriInfo uriInfo,
+			@Context HttpHeaders headers) {
 
-		WalletTransaction transaction = null;
-
-		if (ctype.equals("application/xml")) {
-			transaction = element.getValue();
+		WalletTransaction transaction = element.getValue();
+		long walletID = transaction.getWalletID();
+		long userID = handler.getUserIdByWalletID(walletID);
+		if (userID != -1) {
+			if (isSameUser(headers, userID)) {
+				double amount = transaction.getAmount();
+				String transType = transaction.getTransactionType()
+						.toLowerCase();
+				if (transType.equals("deposit")) {
+					handler.addMoney(walletID, amount);
+				} else if (transType.equals("withdraw"))
+					if (!handler.deductMoney(walletID, amount))
+						return BAD_REQUEST; // not enough money
+				return Response.ok().build();
+			}
 		}
+		return BAD_REQUEST;
+	}
 
-		if (handler.getWalletByID(transaction.getWalletID()) == null) {
-			return CONFLICT;
+	public String extractUsernameFromHeaders(HttpHeaders headers) {
+		String username = null;
+		String[] temp = headers.getHeaderString("Authorization").split(",");
+		for (String s : temp) {
+			if (s.contains("username")) {
+				username = s.split("=")[1];
+				break;
+			}
 		}
+		return username.substring(1, username.length() - 1);
+	}
 
+<<<<<<< HEAD
 		long walletID = transaction.getWalletID();
 		if (handler.getWalletByID(walletID) != null) {
 			double amount = transaction.getAmount();
@@ -149,6 +179,14 @@ public class WalletResource {
 			return Response.ok().header("Access-Control-Allow-Origin", "*").build();
 		}
 		return BAD_REQUEST;
+=======
+	public boolean isSameUser(HttpHeaders headers, long userID) {
+		String username = extractUsernameFromHeaders(headers);
+		long request_user_id = user_handler.getUserIDFromUsername(username);
+		if (request_user_id == -1)
+			return false;
+		return request_user_id == userID;
+>>>>>>> 9ab378beb5128b497e9bdc3707d9f561e592ef0d
 	}
 
 	/**
