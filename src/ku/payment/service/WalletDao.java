@@ -44,7 +44,6 @@ public interface WalletDao {
 	public abstract Wallet findByUser(long userID);
 
 	public abstract long findUserIDByWalletID(long walletID);
-	
-	public abstract long findUserIDByWalletID(long walletID);
+
 	
 }

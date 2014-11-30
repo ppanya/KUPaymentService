@@ -89,12 +89,14 @@ public class PaymentResource {
 				jsonArray.put(json);
 			}
 
-			return Response.ok().entity(jsonArray.toString()).header("Access-Control-Allow-Origin", "*").build();
+			return Response.ok().entity(jsonArray.toString())
+					.header("Access-Control-Allow-Origin", "*").build();
 		}
 
 		GenericEntity<List<PaymentTransaction>> list = convertToXML(p_list);
 
-		return Response.ok(list).header("Access-Control-Allow-Origin", "*").build();
+		return Response.ok(list).header("Access-Control-Allow-Origin", "*")
+				.build();
 	}
 
 	@GET
@@ -113,34 +115,26 @@ public class PaymentResource {
 				return Response.ok(json.toString()).build();
 			}
 
-			return Response.ok(payment).header("Access-Control-Allow-Origin", "*").build();
+			return Response.ok(payment)
+					.header("Access-Control-Allow-Origin", "*").build();
 		}
 
 		return NOT_FOUND;
 	}
 
 	@GET
-	@Path("user/{username}")
+	@Path("user/{email}")
 	@PermitAll
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public Response getPaymentByUser(@HeaderParam("Accept") String accept,
-<<<<<<< HEAD
-			@PathParam("username") String email,
-			@Context HttpHeaders httpHeaders) throws JSONException {
+			@PathParam("email") String email, @Context HttpHeaders httpHeaders)
+			throws JSONException {
 
 		String header_email = extractUsernameFromHeaders(httpHeaders)
 				.toLowerCase();
 		if (header_email.equals(email.toLowerCase())) {
 			long userID = user_handler.getUserIDFromEmail(email);
-=======
-			@PathParam("username") String username,
-			@Context HttpHeaders httpHeaders) throws JSONException {
 
-		String header_username = extractUsernameFromHeaders(httpHeaders)
-				.toLowerCase();
-		if (header_username.equals(username.toLowerCase())) {
-			long userID = user_handler.getUserIDFromUsername(username);
->>>>>>> 9ab378beb5128b497e9bdc3707d9f561e592ef0d
 			List<PaymentTransaction> p_list = handler.getPaymentByUser(userID);
 
 			if (p_list.size() == 0)
@@ -156,11 +150,13 @@ public class PaymentResource {
 					jsonArray.put(json);
 				}
 
-				return Response.ok().entity(jsonArray.toString()).header("Access-Control-Allow-Origin", "*").build();
+				return Response.ok().entity(jsonArray.toString())
+						.header("Access-Control-Allow-Origin", "*").build();
 			}
 			GenericEntity<List<PaymentTransaction>> list = convertToXML(p_list);
 
-			return Response.ok(list).header("Access-Control-Allow-Origin", "*").build();
+			return Response.ok(list).header("Access-Control-Allow-Origin", "*")
+					.build();
 		}
 		return FORBIDDEN;
 	}
@@ -181,11 +177,8 @@ public class PaymentResource {
 			if (handler.sendPayment(payment)) {
 				URI uri = uriInfo.getAbsolutePathBuilder()
 						.path(payment.getId() + "").build();
-<<<<<<< HEAD
-				return Response.created(uri).header("Access-Control-Allow-Origin", "*").build();
-=======
-				return Response.created(uri).build();
->>>>>>> 9ab378beb5128b497e9bdc3707d9f561e592ef0d
+				return Response.created(uri)
+						.header("Access-Control-Allow-Origin", "*").build();
 			}
 		}
 		return BAD_REQUEST;
@@ -195,7 +188,6 @@ public class PaymentResource {
 	@Path("login")
 	@PermitAll
 	public Response login(@Context UriInfo uriInfo, @Context HttpHeaders headers) {
-<<<<<<< HEAD
 
 		String email = extractUsernameFromHeaders(headers);
 
@@ -204,20 +196,10 @@ public class PaymentResource {
 		if (user != null) {
 			long id = user.getId();
 			URI uri = uriInfo.getBaseUri();
-			return Response.ok(uri + RESOURCE_NAME + id).header("Access-Control-Allow-Origin", "*").build();
-=======
-
-		String username = extractUsernameFromHeaders(headers);
-
-		User user = user_handler.getUserByUsername(username);
-
-		if (user != null) {
-			long id = user.getId();
-			URI uri = uriInfo.getBaseUri();
-			return Response.ok(uri + RESOURCE_NAME + id).build();
->>>>>>> 9ab378beb5128b497e9bdc3707d9f561e592ef0d
+			return Response.ok(uri + RESOURCE_NAME + id)
+					.header("Access-Control-Allow-Origin", "*").build();
 		}
-		
+
 		return NOT_FOUND;
 	}
 
@@ -238,11 +220,8 @@ public class PaymentResource {
 			handler.acceptPayment(update);
 
 			URI uri = uriInfo.getBaseUri();
-<<<<<<< HEAD
-			return Response.ok(uri + RESOURCE_NAME + id).header("Access-Control-Allow-Origin", "*").build();
-=======
-			return Response.ok(uri + RESOURCE_NAME + id).build();
->>>>>>> 9ab378beb5128b497e9bdc3707d9f561e592ef0d
+			return Response.ok(uri + RESOURCE_NAME + id)
+					.header("Access-Control-Allow-Origin", "*").build();
 		}
 
 		return NOT_FOUND;
@@ -264,11 +243,8 @@ public class PaymentResource {
 			handler.reversePayment(update);
 
 			URI uri = uriInfo.getBaseUri();
-<<<<<<< HEAD
-			return Response.ok(uri + RESOURCE_NAME + id).header("Access-Control-Allow-Origin", "*").build();
-=======
-			return Response.ok(uri + RESOURCE_NAME + id).build();
->>>>>>> 9ab378beb5128b497e9bdc3707d9f561e592ef0d
+			return Response.ok(uri + RESOURCE_NAME + id)
+					.header("Access-Control-Allow-Origin", "*").build();
 		}
 
 		return NOT_FOUND;

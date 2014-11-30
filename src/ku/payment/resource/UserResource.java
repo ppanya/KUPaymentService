@@ -77,67 +77,54 @@ public class UserResource {
 				jsonArray.put(json);
 			}
 
-			return Response.ok().entity(jsonArray.toString()).header("Access-Control-Allow-Origin", "*").build();
+			return Response.ok().entity(jsonArray.toString())
+					.header("Access-Control-Allow-Origin", "*").build();
 		}
 
 		GenericEntity<List<User>> list = convertToXML(u_list);
 
-		return Response.ok(list).header("Access-Control-Allow-Origin", "*").build();
+		return Response.ok(list).header("Access-Control-Allow-Origin", "*")
+				.build();
 	}
 
-//	@GET
-//	@Path("/{id: [1-9]\\d*}")
-//	@RolesAllowed({ "user" })
-//	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-//	public Response getUserById(@HeaderParam("Accept") String accept,
-//			@PathParam("id") long id, @Context HttpHeaders headers)
-//			throws JSONException {
-//
-//		if (isSameUser(headers, id)) {
-//
-//			User user = handler.getUserByID(id);
-//			if (accept.equals("application/json")) {
-//				JSONObject json = new JSONObject(user);
-//				return Response.ok(json.toString()).build();
-//			}
-//
-//			return Response.ok(user).build();
-//		}
-//
-//		return NOT_FOUND;
-//	}
-	
+	// @GET
+	// @Path("/{id: [1-9]\\d*}")
+	// @RolesAllowed({ "user" })
+	// @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	// public Response getUserById(@HeaderParam("Accept") String accept,
+	// @PathParam("id") long id, @Context HttpHeaders headers)
+	// throws JSONException {
+	//
+	// if (isSameUser(headers, id)) {
+	//
+	// User user = handler.getUserByID(id);
+	// if (accept.equals("application/json")) {
+	// JSONObject json = new JSONObject(user);
+	// return Response.ok(json.toString()).build();
+	// }
+	//
+	// return Response.ok(user).build();
+	// }
+	//
+	// return NOT_FOUND;
+	// }
+
 	@GET
-<<<<<<< HEAD
 	@Path("/{email}")
-	@RolesAllowed({"user"})
+	@RolesAllowed({ "user" })
 	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public Response getUserByUsername(@HeaderParam("Accept") String accept,
 			@PathParam("email") String email, @Context HttpHeaders headers)
 			throws JSONException {
-		
+
 		String header_email = extractUsernameFromHeaders(headers).toLowerCase();
-		if(header_email.equals(email.toLowerCase())) {
+		if (header_email.equals(email.toLowerCase())) {
 			User user = handler.getUserByEmail(email);
-			if(user!=null) {
-				return Response.ok(user).header("Access-Control-Allow-Origin", "*").build();
-=======
-	@Path("/{username}")
-	@RolesAllowed({"user"})
-	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-	public Response getUserByUsername(@HeaderParam("Accept") String accept,
-			@PathParam("username") String username, @Context HttpHeaders headers)
-			throws JSONException {
-		
-		String header_username = extractUsernameFromHeaders(headers).toLowerCase();
-		if(header_username.equals(username.toLowerCase())) {
-			User user = handler.getUserByUsername(username);
-			if(user!=null) {
-				return Response.ok(user).build();
->>>>>>> 9ab378beb5128b497e9bdc3707d9f561e592ef0d
+			if (user != null) {
+				return Response.ok(user)
+						.header("Access-Control-Allow-Origin", "*").build();
 			}
 		}
-		
 		return NOT_FOUND;
 	}
 
@@ -145,7 +132,6 @@ public class UserResource {
 	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 	public Response createUser(@HeaderParam("Content-Type") String ctype,
 			JAXBElement<User> element, @Context UriInfo uriInfo) {
-<<<<<<< HEAD
 
 		List<String> u_list = handler.getAllemail();
 
@@ -154,27 +140,15 @@ public class UserResource {
 		if (user != null) {
 			if (handler.getUserByID(user.getId()) != null
 					|| u_list.contains(user.getEmail())) {
-=======
-
-		List<String> u_list = handler.getAllusername();
-
-		User user = element.getValue();
-
-		if (user != null) {
-			if (handler.getUserByID(user.getId()) != null
-					|| u_list.contains(user.getUsername())) {
->>>>>>> 9ab378beb5128b497e9bdc3707d9f561e592ef0d
 				return CONFLICT;
 			}
 
 			if (handler.createUser(user)) {
 				URI uri = uriInfo.getAbsolutePathBuilder()
 						.path(user.getId() + "").build();
-<<<<<<< HEAD
-				return Response.created(uri).header("Access-Control-Allow-Origin", "*").build();
-=======
-				return Response.created(uri).build();
->>>>>>> 9ab378beb5128b497e9bdc3707d9f561e592ef0d
+				return Response.created(uri)
+						.header("Access-Control-Allow-Origin", "*").build();
+
 			}
 		}
 		return BAD_REQUEST;
@@ -196,7 +170,8 @@ public class UserResource {
 			handler.updateUser(update);
 
 			URI uri = uriInfo.getAbsolutePath();
-			return Response.ok(uri + "").header("Access-Control-Allow-Origin", "*").build();
+			return Response.ok(uri + "")
+					.header("Access-Control-Allow-Origin", "*").build();
 		}
 
 		return NOT_FOUND;
@@ -215,13 +190,8 @@ public class UserResource {
 	}
 
 	public boolean isSameUser(HttpHeaders headers, long userID) {
-<<<<<<< HEAD
 		String email = extractUsernameFromHeaders(headers);
 		long request_user_id = handler.getUserIDFromEmail(email);
-=======
-		String username = extractUsernameFromHeaders(headers);
-		long request_user_id = handler.getUserIDFromUsername(username);
->>>>>>> 9ab378beb5128b497e9bdc3707d9f561e592ef0d
 		if (request_user_id == -1)
 			return false;
 		return request_user_id == userID;

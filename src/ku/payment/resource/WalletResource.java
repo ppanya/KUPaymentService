@@ -166,27 +166,12 @@ public class WalletResource {
 		return username.substring(1, username.length() - 1);
 	}
 
-<<<<<<< HEAD
-		long walletID = transaction.getWalletID();
-		if (handler.getWalletByID(walletID) != null) {
-			double amount = transaction.getAmount();
-			String transType = transaction.getTransactionType().toLowerCase();
-			if (transType.equals("deposit")) {
-				handler.addMoney(walletID, amount);
-			} else if (transType.equals("withdraw"))
-				if(!handler.deductMoney(walletID, amount))
-					return BAD_REQUEST; //not enough money
-			return Response.ok().header("Access-Control-Allow-Origin", "*").build();
-		}
-		return BAD_REQUEST;
-=======
 	public boolean isSameUser(HttpHeaders headers, long userID) {
-		String username = extractUsernameFromHeaders(headers);
-		long request_user_id = user_handler.getUserIDFromUsername(username);
+		String email = extractUsernameFromHeaders(headers);
+		long request_user_id = user_handler.getUserIDFromEmail(email);
 		if (request_user_id == -1)
 			return false;
 		return request_user_id == userID;
->>>>>>> 9ab378beb5128b497e9bdc3707d9f561e592ef0d
 	}
 
 	/**
