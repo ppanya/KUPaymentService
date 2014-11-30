@@ -42,5 +42,7 @@ public interface WalletDao {
 	public abstract boolean update(Wallet update);
 
 	public abstract Wallet findByUser(long userID);
+
+	public abstract long findUserIDByWalletID(long walletID);
 	
 }

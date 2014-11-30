@@ -72,12 +72,12 @@ public class WalletResource {
 				jsonArray.put(json);
 			}
 
-			return Response.ok().entity(jsonArray.toString()).build();
+			return Response.ok().entity(jsonArray.toString()).header("Access-Control-Allow-Origin", "*").build();
 		}
 
 		GenericEntity<List<Wallet>> list = convertToXML(p_list);
 
-		return Response.ok(list).build();
+		return Response.ok(list).header("Access-Control-Allow-Origin", "*").build();
 	}
 
 	@GET
@@ -95,7 +95,7 @@ public class WalletResource {
 				return Response.ok(json.toString()).build();
 			}
 
-			return Response.ok(wallet).build();
+			return Response.ok(wallet).header("Access-Control-Allow-Origin", "*").build();
 		}
 
 		return NOT_FOUND;
@@ -116,7 +116,7 @@ public class WalletResource {
 				return Response.ok(json.toString()).build();
 			}
 
-			return Response.ok(wallet).build();
+			return Response.ok(wallet).header("Access-Control-Allow-Origin", "*").build();
 		}
 
 		return NOT_FOUND;
@@ -146,7 +146,7 @@ public class WalletResource {
 			} else if (transType.equals("withdraw"))
 				if(!handler.deductMoney(walletID, amount))
 					return BAD_REQUEST; //not enough money
-			return Response.ok().build();
+			return Response.ok().header("Access-Control-Allow-Origin", "*").build();
 		}
 		return BAD_REQUEST;
 	}

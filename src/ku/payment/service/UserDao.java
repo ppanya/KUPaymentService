@@ -22,10 +22,11 @@ public interface UserDao {
 	public abstract boolean delete(long id);
 
 	
-	public abstract List<String> findAllUsername();
+	public abstract List<String> findAllEmail();
 	
+	public abstract User find(String email);
 	
-	public abstract long findIDFromUsername(String username);
+	public abstract long findIDFromEmail(String email);
 	
 	/**
 	 * Save or replace a contact.

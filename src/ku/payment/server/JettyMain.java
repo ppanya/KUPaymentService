@@ -2,6 +2,8 @@ package ku.payment.server;
 
 import java.io.IOException;
 
+import ku.payment.resource.PaymentApplication;
+
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.JDBCLoginService;
@@ -14,6 +16,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.security.Constraint;
 import org.glassfish.jersey.server.ServerProperties;
+import org.glassfish.jersey.servlet.ServletProperties;
 
 /**
  * <p>
@@ -75,7 +78,7 @@ public class JettyMain {
 	 * The default port to listen on. Typically 80 or 8080. On Ubuntu or MacOS
 	 * if you are not root then you must use a port > 1024.
 	 */
-	static final int PORT = 8080;
+	static final int PORT = 25052;
 
 	static Server server;
 
@@ -148,8 +151,8 @@ public class JettyMain {
 		// This initialization parameter tells Jersey to auto-configure all
 		// resource classes
 		// in the named package(s).
-		holder.setInitParameter(ServerProperties.PROVIDER_PACKAGES,
-				"ku.payment.resource");
+		holder.setInitParameter(ServletProperties.JAXRS_APPLICATION_CLASS,
+				PaymentApplication.class.getName());
 		context.addServlet(holder, "/*");
 
 		// (5) Add the context (our application) to the Jetty server.
@@ -190,7 +193,7 @@ public class JettyMain {
 		// using annotations.
 		// But if I comment this out, Jetty returns 403 Forbidden // instead of
 		// 401 Unauthorized.
-		constraint.setRoles(new String[] { "user", "admin" });
+		constraint.setRoles(new String[] { "user", "admin"});
 		// A mapping of resource paths to constraints
 		ConstraintMapping mapping = new ConstraintMapping();
 		mapping.setPathSpec("/*");

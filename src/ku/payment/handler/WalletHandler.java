@@ -57,6 +57,10 @@ public class WalletHandler {
 		return walletDao.findByUser(userID);
 	}
 	
+	public long getUserIdByWalletID(long walletID) {
+		return walletDao.findUserIDByWalletID(walletID);
+	}
+	
 	private boolean isWalletExist(long walletID) {
 		if (walletDao.find(walletID) == null)
 			return false;

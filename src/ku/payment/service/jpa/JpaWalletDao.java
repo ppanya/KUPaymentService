@@ -108,6 +108,15 @@ public class JpaWalletDao implements WalletDao {
 		}
 	}
 
+	@Override
+	public long findUserIDByWalletID(long walletID) {
+		Query query = em.createQuery("SELECT c.ownerID FROM Wallet c WHERE c.id= :walletID");
+		query.setParameter("walletID", walletID);
+		List<Long> list = query.getResultList();
+		if(list.size()==1) return list.get(0);
+		return -1;
+	}
+
 	
 
 }

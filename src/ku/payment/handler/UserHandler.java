@@ -52,12 +52,16 @@ public class UserHandler {
 		return userDao.find(userID);
 	}
 	
-	public List<String> getAllusername(){
-		return userDao.findAllUsername();
+	public List<String> getAllemail(){
+		return userDao.findAllEmail();
 	}
 	
-	public long getUserIDFromUsername(String username) {
-		return userDao.findIDFromUsername(username);
+	public long getUserIDFromEmail(String email) {
+		return userDao.findIDFromEmail(email);
+	}
+	
+	public User getUserByEmail(String email) {
+		return userDao.find(email);
 	}
 
 	private boolean isUserExist(User user) {
