@@ -14,8 +14,8 @@ public class WalletHandler {
 		this.walletDao = DaoFactory.getInstance().getWalletDao();
 	}
 
-	public boolean createWallet(long userID) {
-		Wallet wallet = new Wallet(userID, 0, "");
+	public boolean createWallet(long userID,String accountNumber) {
+		Wallet wallet = new Wallet(userID, 0, accountNumber);
 		return walletDao.save(wallet);
 	}
 

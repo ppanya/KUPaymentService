@@ -35,7 +35,9 @@ public class JpaWalletDao implements WalletDao {
 	public Wallet findByUser(long userID){
 		Query query = em.createQuery("SELECT c FROM Wallet c WHERE c.ownerID = :userID");
 		query.setParameter("userID", userID);
-		return (Wallet) query.getSingleResult();
+		List<Wallet> list = query.getResultList();
+		if(list.size()<1) return null;
+		return list.get(0);
 	}
 
 	@Override

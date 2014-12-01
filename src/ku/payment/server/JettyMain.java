@@ -1,6 +1,9 @@
 package ku.payment.server;
 
 import java.io.IOException;
+import java.util.EnumSet;
+
+import javax.servlet.DispatcherType;
 
 import ku.payment.resource.PaymentApplication;
 
@@ -12,8 +15,10 @@ import org.eclipse.jetty.security.authentication.BasicAuthenticator;
 import org.eclipse.jetty.security.authentication.DigestAuthenticator;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.eclipse.jetty.util.security.Constraint;
 import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.servlet.ServletProperties;
@@ -153,8 +158,10 @@ public class JettyMain {
 		// in the named package(s).
 		holder.setInitParameter(ServletProperties.JAXRS_APPLICATION_CLASS,
 				PaymentApplication.class.getName());
+		context.addFilter(AppFilter.class, "/*", EnumSet.allOf(DispatcherType.class));
 		context.addServlet(holder, "/*");
-
+		
+		
 		// (5) Add the context (our application) to the Jetty server.
 		server.setHandler(getSecurityHandler(context));
 //		server.setHandler(context);
@@ -195,13 +202,26 @@ public class JettyMain {
 		// 401 Unauthorized.
 		constraint.setRoles(new String[] { "user", "admin"});
 		// A mapping of resource paths to constraints
-		ConstraintMapping mapping = new ConstraintMapping();
-		mapping.setPathSpec("/*");
-		mapping.setConstraint(constraint);
+		ConstraintMapping wallet_contraint = new ConstraintMapping();
+		wallet_contraint.setMethodOmissions(new String[]{"OPTIONS","HEAD", "POST"});
+		wallet_contraint.setPathSpec("/wallet/*");
+		wallet_contraint.setConstraint(constraint);
+		
+		ConstraintMapping payment_constraint = new ConstraintMapping();
+		payment_constraint.setMethodOmissions(new String[]{"OPTIONS","HEAD"});
+		payment_constraint.setPathSpec("/payment/*");
+		payment_constraint.setConstraint(constraint);
+		
+		
+		ConstraintMapping user_constraint = new ConstraintMapping();
+		user_constraint.setMethodOmissions(new String[]{"OPTIONS","HEAD","POST"});
+		user_constraint.setPathSpec("/user/*");
+		user_constraint.setConstraint(constraint);
 		ConstraintSecurityHandler securityHandler = new ConstraintSecurityHandler();
 		// setConstraintMappings requires an array or List as argument
 		securityHandler
-				.setConstraintMappings(new ConstraintMapping[] { mapping });
+				.setConstraintMappings(new ConstraintMapping[] { wallet_contraint, 
+						payment_constraint, user_constraint });
 
 		securityHandler.setAuthenticator(new DigestAuthenticator());
 		securityHandler.setLoginService(loginService);

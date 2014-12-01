@@ -20,18 +20,16 @@ public class UserHandler {
 	public boolean createUser(User user) {
 		if (!isUserExist(user))
 			return false;
-		if (userDao.save(user)) {
-			return w_handler.createWallet(user.getId());
-		}
-		return false;
+		return userDao.save(user);
+
 	}
 
 	public boolean deleteUser(User user) {
 		if (!isUserExist(user))
 			return false;
 		Wallet wallet = w_handler.getWalletByuserID(user.getId());
-		
-		if( wallet != null) {
+
+		if (wallet != null) {
 			w_handler.deleteWallet(wallet.getId());
 			return userDao.delete(user.getId());
 		}
@@ -43,23 +41,23 @@ public class UserHandler {
 			return false;
 		return userDao.update(user);
 	}
-	
+
 	public List<User> getAllUser() {
 		return userDao.findAll();
 	}
-	
+
 	public User getUserByID(long userID) {
 		return userDao.find(userID);
 	}
-	
-	public List<String> getAllemail(){
+
+	public List<String> getAllemail() {
 		return userDao.findAllEmail();
 	}
-	
+
 	public long getUserIDFromEmail(String email) {
 		return userDao.findIDFromEmail(email);
 	}
-	
+
 	public User getUserByEmail(String email) {
 		return userDao.find(email);
 	}
@@ -67,7 +65,7 @@ public class UserHandler {
 	public User getUserByUsername(String username) {
 		return userDao.find(username);
 	}
-	
+
 	private boolean isUserExist(User user) {
 		if (userDao.find(user.getId()) != null)
 			return false;

@@ -145,8 +145,8 @@ public class UserResource {
 
 			if (handler.createUser(user)) {
 				URI uri = uriInfo.getAbsolutePathBuilder()
-						.path(user.getId() + "").build();
-				return Response.created(uri)
+						.path(user.getEmail() + "").build();
+				return Response.created(uri).entity(user.getId())
 						.header("Access-Control-Allow-Origin", "*").build();
 
 			}

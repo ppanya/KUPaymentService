@@ -78,12 +78,14 @@ public class WalletResource {
 				jsonArray.put(json);
 			}
 
-			return Response.ok().entity(jsonArray.toString()).header("Access-Control-Allow-Origin", "*").build();
+			return Response.ok().entity(jsonArray.toString())
+					.header("Access-Control-Allow-Origin", "*").build();
 		}
 
 		GenericEntity<List<Wallet>> list = convertToXML(p_list);
 
-		return Response.ok(list).header("Access-Control-Allow-Origin", "*").build();
+		return Response.ok(list).header("Access-Control-Allow-Origin", "*")
+				.build();
 	}
 
 	@GET
@@ -98,10 +100,12 @@ public class WalletResource {
 			Wallet wallet = handler.getWalletByID(id);
 			if (accept.equals("application/json")) {
 				JSONObject json = new JSONObject(wallet);
-				return Response.ok(json.toString()).build();
+				return Response.ok(json.toString())
+						.header("Access-Control-Allow-Origin", "*").build();
 			}
 
-			return Response.ok(wallet).header("Access-Control-Allow-Origin", "*").build();
+			return Response.ok(wallet)
+					.header("Access-Control-Allow-Origin", "*").build();
 		}
 
 		return NOT_FOUND;
@@ -119,13 +123,41 @@ public class WalletResource {
 			Wallet wallet = handler.getWalletByuserID(userID);
 			if (accept.equals("application/json")) {
 				JSONObject json = new JSONObject(wallet);
-				return Response.ok(json.toString()).build();
+				return Response.ok(json.toString())
+						.header("Access-Control-Allow-Origin", "*").build();
 			}
 
-			return Response.ok(wallet).header("Access-Control-Allow-Origin", "*").build();
+			return Response.ok(wallet)
+					.header("Access-Control-Allow-Origin", "*").build();
 		}
 
 		return NOT_FOUND;
+	}
+	
+	@POST
+	@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	public Response createWallet(@HeaderParam("Content-Type") String ctype,
+			JAXBElement<Wallet> element, @Context UriInfo uriInfo) {
+
+		List<Wallet> w_list = handler.getAllWallet();
+
+		Wallet wallet = element.getValue();
+
+		if (wallet != null) {
+			if (handler.getWalletByuserID(wallet.getOwnerID()) != null
+					|| w_list.contains(wallet)) {
+				return CONFLICT;
+			}
+
+			if (handler.createWallet(wallet.getOwnerID(), wallet.getAccountNumber())) {
+				URI uri = uriInfo.getAbsolutePathBuilder()
+						.path(wallet.getId() + "").build();
+				return Response.created(uri).entity(wallet.getId())
+						.header("Access-Control-Allow-Origin", "*").build();
+
+			}
+		}
+		return BAD_REQUEST;
 	}
 
 	@PUT
@@ -148,7 +180,8 @@ public class WalletResource {
 				} else if (transType.equals("withdraw"))
 					if (!handler.deductMoney(walletID, amount))
 						return BAD_REQUEST; // not enough money
-				return Response.ok().build();
+				return Response.ok().header("Access-Control-Allow-Origin", "*")
+						.build();
 			}
 		}
 		return BAD_REQUEST;

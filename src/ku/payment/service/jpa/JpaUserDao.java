@@ -109,7 +109,7 @@ public class JpaUserDao implements UserDao {
 
 	@Override
 	public List<String> findAllEmail() {
-		Query query = em.createQuery("SELECT c.username FROM User c");
+		Query query = em.createQuery("SELECT c.email FROM User c");
 		return query.getResultList();
 	}
 

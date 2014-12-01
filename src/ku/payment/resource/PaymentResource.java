@@ -112,7 +112,8 @@ public class PaymentResource {
 
 			if (accept.equals("application/json")) {
 				JSONObject json = new JSONObject(payment);
-				return Response.ok(json.toString()).build();
+				return Response.ok(json.toString())
+						.header("Access-Control-Allow-Origin", "*").build();
 			}
 
 			return Response.ok(payment)
@@ -150,8 +151,16 @@ public class PaymentResource {
 					jsonArray.put(json);
 				}
 
-				return Response.ok().entity(jsonArray.toString())
-						.header("Access-Control-Allow-Origin", "*").build();
+				return Response
+						.ok()
+						.entity(jsonArray.toString())
+						.header("Access-Control-Allow-Origin",
+								"http://128.199.212.108:25052")
+						.header("Access-Control-Allow-Methods",
+								"POST, GET, PUT, UPDATE, OPTIONS")
+						.header("Access-Control-Allow-Headers",
+								"Content-Type, Accept, X-Requested-With")
+						.build();
 			}
 			GenericEntity<List<PaymentTransaction>> list = convertToXML(p_list);
 
