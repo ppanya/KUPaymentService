@@ -27,8 +27,10 @@ public class PaymentHandler {
 
 	public PaymentTransaction acceptPayment(PaymentTransaction payment) {
 
-		Wallet customer_wallet = walletHandler.getWalletByuserID(payment.getRecipientID());
-		Wallet merchant_wallet = walletHandler.getWalletByuserID(payment.getSenderID());
+		Wallet customer_wallet = walletHandler.getWalletByuserID(payment
+				.getRecipientID());
+		Wallet merchant_wallet = walletHandler.getWalletByuserID(payment
+				.getSenderID());
 
 		double customer_cash = customer_wallet.getBalance();
 		double amount = payment.getAmount();
@@ -40,42 +42,48 @@ public class PaymentHandler {
 			walletHandler.deductMoney(customer_wallet.getId(), amount);
 			walletHandler.addMoney(merchant_wallet.getId(), amount);
 		}
-		
+
 		payDao.update(payment);
 		return payment;
 	}
 
 	public PaymentTransaction reversePayment(PaymentTransaction payment) {
-		
-		Wallet customer_wallet = walletHandler.getWalletByuserID(payment.getRecipientID());
-		Wallet merchant_wallet = walletHandler.getWalletByuserID(payment.getSenderID());
-		
+
+		Wallet customer_wallet = walletHandler.getWalletByuserID(payment
+				.getRecipientID());
+		Wallet merchant_wallet = walletHandler.getWalletByuserID(payment
+				.getSenderID());
+
 		double merchant_cash = merchant_wallet.getBalance();
 		double amount = payment.getAmount();
-		
+
 		payment.setStatus("Reverse Transaction");
-		if(merchant_cash<amount)
+		if (merchant_cash < amount)
 			payment.setStatus("Can't reverse a Transaction due to insufficient merchant's cash.");
 		else {
 			walletHandler.deductMoney(merchant_wallet.getId(), amount);
 			walletHandler.addMoney(customer_wallet.getId(), amount);
 		}
 		payDao.update(payment);
-		
+
 		return payment;
-		
+
 	}
-	
+
 	public List<PaymentTransaction> getAllPayment() {
 		return payDao.findAll();
 	}
-	
+
 	public PaymentTransaction getPaymentByID(long id) {
 		return payDao.find(id);
 	}
-	
+
 	public List<PaymentTransaction> getPaymentByUser(long userID) {
 		return payDao.findByUser(userID);
+	}
+
+	public boolean deletePayment(long id) {
+		return payDao.delete(id);
 	}
 
 }

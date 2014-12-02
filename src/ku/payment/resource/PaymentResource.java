@@ -12,6 +12,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.annotation.security.RunAs;
 import javax.inject.Singleton;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -151,16 +152,8 @@ public class PaymentResource {
 					jsonArray.put(json);
 				}
 
-				return Response
-						.ok()
-						.entity(jsonArray.toString())
-						.header("Access-Control-Allow-Origin",
-								"http://128.199.212.108:25052")
-						.header("Access-Control-Allow-Methods",
-								"POST, GET, PUT, UPDATE, OPTIONS")
-						.header("Access-Control-Allow-Headers",
-								"Content-Type, Accept, X-Requested-With")
-						.build();
+				return Response.ok().entity(jsonArray.toString())
+						.header("Access-Control-Allow-Origin", "*").build();
 			}
 			GenericEntity<List<PaymentTransaction>> list = convertToXML(p_list);
 
@@ -254,6 +247,27 @@ public class PaymentResource {
 			URI uri = uriInfo.getBaseUri();
 			return Response.ok(uri + RESOURCE_NAME + id)
 					.header("Access-Control-Allow-Origin", "*").build();
+		}
+
+		return NOT_FOUND;
+	}
+
+	@DELETE
+	@Path("{id: [1-9]\\d*}")
+	@PermitAll
+	@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+	public Response deletePayment(@PathParam("id") long id,
+			@Context UriInfo uriInfo, @Context Request req,
+			@Context HttpHeaders httpHeaders) {
+
+		if (isUserRelatetoPayment(httpHeaders, id, RECIPIENT)) {
+			PaymentTransaction payment = handler.getPaymentByID(id);
+
+			handler.deletePayment(payment.getId());
+
+			return Response.ok().header("Access-Control-Allow-Origin", "*")
+					.build();
+
 		}
 
 		return NOT_FOUND;
