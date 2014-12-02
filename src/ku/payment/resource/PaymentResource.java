@@ -90,14 +90,12 @@ public class PaymentResource {
 				jsonArray.put(json);
 			}
 
-			return Response.ok().entity(jsonArray.toString())
-					.header("Access-Control-Allow-Origin", "*").build();
+			return Response.ok().entity(jsonArray.toString()).build();
 		}
 
 		GenericEntity<List<PaymentTransaction>> list = convertToXML(p_list);
 
-		return Response.ok(list).header("Access-Control-Allow-Origin", "*")
-				.build();
+		return Response.ok(list).build();
 	}
 
 	@GET
@@ -113,12 +111,10 @@ public class PaymentResource {
 
 			if (accept.equals("application/json")) {
 				JSONObject json = new JSONObject(payment);
-				return Response.ok(json.toString())
-						.header("Access-Control-Allow-Origin", "*").build();
+				return Response.ok(json.toString()).build();
 			}
 
-			return Response.ok(payment)
-					.header("Access-Control-Allow-Origin", "*").build();
+			return Response.ok(payment).build();
 		}
 
 		return NOT_FOUND;
@@ -152,13 +148,11 @@ public class PaymentResource {
 					jsonArray.put(json);
 				}
 
-				return Response.ok().entity(jsonArray.toString())
-						.header("Access-Control-Allow-Origin", "*").build();
+				return Response.ok().entity(jsonArray.toString()).build();
 			}
 			GenericEntity<List<PaymentTransaction>> list = convertToXML(p_list);
 
-			return Response.ok(list).header("Access-Control-Allow-Origin", "*")
-					.build();
+			return Response.ok(list).build();
 		}
 		return FORBIDDEN;
 	}
@@ -179,8 +173,8 @@ public class PaymentResource {
 			if (handler.sendPayment(payment)) {
 				URI uri = uriInfo.getAbsolutePathBuilder()
 						.path(payment.getId() + "").build();
-				return Response.created(uri)
-						.header("Access-Control-Allow-Origin", "*").build();
+
+				return Response.created(uri).build();
 			}
 		}
 		return BAD_REQUEST;
@@ -198,8 +192,7 @@ public class PaymentResource {
 		if (user != null) {
 			long id = user.getId();
 			URI uri = uriInfo.getBaseUri();
-			return Response.ok(uri + RESOURCE_NAME + id)
-					.header("Access-Control-Allow-Origin", "*").build();
+			return Response.ok(uri + RESOURCE_NAME + id).build();
 		}
 
 		return NOT_FOUND;
@@ -222,8 +215,7 @@ public class PaymentResource {
 			handler.acceptPayment(update);
 
 			URI uri = uriInfo.getBaseUri();
-			return Response.ok(uri + RESOURCE_NAME + id)
-					.header("Access-Control-Allow-Origin", "*").build();
+			return Response.ok(uri + RESOURCE_NAME + id).build();
 		}
 
 		return NOT_FOUND;
@@ -245,8 +237,7 @@ public class PaymentResource {
 			handler.reversePayment(update);
 
 			URI uri = uriInfo.getBaseUri();
-			return Response.ok(uri + RESOURCE_NAME + id)
-					.header("Access-Control-Allow-Origin", "*").build();
+			return Response.ok(uri + RESOURCE_NAME + id).build();
 		}
 
 		return NOT_FOUND;
@@ -265,8 +256,7 @@ public class PaymentResource {
 
 			handler.deletePayment(payment.getId());
 
-			return Response.ok().header("Access-Control-Allow-Origin", "*")
-					.build();
+			return Response.ok().build();
 
 		}
 

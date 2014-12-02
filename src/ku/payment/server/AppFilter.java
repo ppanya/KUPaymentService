@@ -29,7 +29,8 @@ public class AppFilter implements Filter {
 		response.setHeader("Access-Control-Allow-Methods",
 				"POST, PUT, GET, DELETE");
 		response.setHeader("Access-Control-Allow-Headers",
-				"Content-Type , Accept");
+				"X-Requested-With, Content-Type , Accept, Location");
+		response.setHeader("Access-Control-Expose-Headers", "Location");
 
 		chain.doFilter(req, res);
 	}

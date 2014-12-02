@@ -77,14 +77,12 @@ public class UserResource {
 				jsonArray.put(json);
 			}
 
-			return Response.ok().entity(jsonArray.toString())
-					.header("Access-Control-Allow-Origin", "*").build();
+			return Response.ok().entity(jsonArray.toString()).build();
 		}
 
 		GenericEntity<List<User>> list = convertToXML(u_list);
 
-		return Response.ok(list).header("Access-Control-Allow-Origin", "*")
-				.build();
+		return Response.ok(list).build();
 	}
 
 	// @GET
@@ -121,8 +119,7 @@ public class UserResource {
 		if (header_email.equals(email.toLowerCase())) {
 			User user = handler.getUserByEmail(email);
 			if (user != null) {
-				return Response.ok(user)
-						.header("Access-Control-Allow-Origin", "*").build();
+				return Response.ok(user).build();
 			}
 		}
 		return NOT_FOUND;
@@ -146,8 +143,7 @@ public class UserResource {
 			if (handler.createUser(user)) {
 				URI uri = uriInfo.getAbsolutePathBuilder()
 						.path(user.getEmail() + "").build();
-				return Response.created(uri).entity(user.getId())
-						.header("Access-Control-Allow-Origin", "*").build();
+				return Response.created(uri).build();
 
 			}
 		}
@@ -170,8 +166,7 @@ public class UserResource {
 			handler.updateUser(update);
 
 			URI uri = uriInfo.getAbsolutePath();
-			return Response.ok(uri + "")
-					.header("Access-Control-Allow-Origin", "*").build();
+			return Response.ok(uri + "").build();
 		}
 
 		return NOT_FOUND;

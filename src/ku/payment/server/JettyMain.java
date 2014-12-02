@@ -208,10 +208,9 @@ public class JettyMain {
 		wallet_contraint.setConstraint(constraint);
 		
 		ConstraintMapping payment_constraint = new ConstraintMapping();
-		payment_constraint.setMethodOmissions(new String[]{"OPTIONS","HEAD"});
+		payment_constraint.setMethodOmissions(new String[]{"OPTIONS","HEAD","POST" });
 		payment_constraint.setPathSpec("/payment/*");
 		payment_constraint.setConstraint(constraint);
-		
 		
 		ConstraintMapping user_constraint = new ConstraintMapping();
 		user_constraint.setMethodOmissions(new String[]{"OPTIONS","HEAD","POST"});
