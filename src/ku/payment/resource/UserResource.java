@@ -142,7 +142,7 @@ public class UserResource {
 
 			if (handler.createUser(user)) {
 				URI uri = uriInfo.getAbsolutePathBuilder()
-						.path(user.getEmail() + "").build();
+						.path(user.getId() + "").build();
 				return Response.created(uri).build();
 
 			}
