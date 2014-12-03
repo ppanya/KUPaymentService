@@ -8,7 +8,7 @@ There is not include parts that use bank api to redeem money from this service o
 * Merchant
 * Customer
 * Payment System Admin
-<br><b><i>note:</i></b> I consider that merchant and customer is a different user type. But I still consider about customer to customer transaction, should this service support it or not.
+<br><b><i>note:</i></b>I consider that merchant and customer is a different user type. But I still consider about customer to customer transaction, should this service support it or not.
 
 <h3>Specific Term</h3>
 * Payment - a payment for goods/services that merchant send to the recipient (customer).
@@ -17,16 +17,19 @@ There is not include parts that use bank api to redeem money from this service o
 
 <h3>Use Cases</h3>
 1. Send a payment
+When client get price ,recipient id ,sender id ,and date time, it can POST payment to webservice.
   * Primary Actor: Merchant
   * Scope: Payment System
   * Level: Very High
   * Story: Merchant send a payment to customer.
 2. Accept a payment (funds transferred)
+When customer sure for transfer money, they can PUT payment to accept the payment.
   * Primary Actor: Customer
   * Scope: Payment System
   * Level: Very High
   * Story: Customer approve a payment then funds transferred to merchant. (payment completed)
 3. Reverse/chargeback a payment
+When customer see payment description, price/merchant is not correct, Customer will decline this payment.
   * Primary Actor: Customer
   * Scope: Payment System
   * Level: Low
@@ -39,7 +42,6 @@ There is not include parts that use bank api to redeem money from this service o
 
 <h3>API Specification</h3>
 <b><i>[API Specification at github's wiki](https://github.com/maixezer/KUPaymentService/wiki/API-Specification) </i></b> <br>
-<b><i>[google's doc link](https://docs.google.com/document/d/1AndOGXRR6K3h-zw_yxhqK6GgPK1ZZImVK7IjFj_BfzM/edit#) <i><b>
 
 <h3>Reference</h3>
 This part is reference of my research through paypal system.
