@@ -42,7 +42,7 @@ When customer see payment description, price/merchant is not correct, Customer w
 2. Current balance for each user.
 3. (Extra) Support multiple currency and multiple language
 
-<h3>Scenario Register</h3>
+<h2>Scenario Register</h2>
 <h4>Main Success Scenario and steps</h4>
 1. User types a user name of his or her choice
 2. User types a password
@@ -68,6 +68,36 @@ Create Account
 <h4>Guarantee</h4>
   User becomes a registeredplayer
 
+<h2>Scenario Login User</h2>
+<h4>Main Sucess scenario</h4>
+1. User types his/her user name
+2. User types his/her password
+Login
+
+<h4>Extensions</h4>
+2a User provides invalid login parameter
+(see Login Failed)
+
+<h4>Trigger</h4>
+User selects the "Login" link
+
+<h4>Precondition</h4>
+User does not login yet
+
+<h4>Guarantee</h4>
+The user can see his/her own information in paypal
+
+<h2> Scenario Login failed</h2>
+<h3>Login Failed</h3>
+<h4>Precondition</h4>
+-The user provides invalid login parameters
+Precondition should be identical with the condition of the extension point
+<h4>Main success scenario</h4>
+1.System redirects the User to the Login page
+2.System informs the User that he/she typed a non-registered user name
+<h3>Login without Registration</h3>
+<h4>Precondition</h4>
+-The User typed a non-registered user name
 <h3>API Specification</h3>
 <b><i>[API Specification at github's wiki](https://github.com/maixezer/KUPaymentService/wiki/API-Specification) </i></b> <br>
 
