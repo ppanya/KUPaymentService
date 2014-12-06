@@ -70,7 +70,23 @@ When customer see payment description, price/merchant is not correct, Customer w
   * Level: Low
   * Story: Some problem occured. Customers want to refund their funds back. They go and try to reverse/rollback a payment.
 
+<h2>Scenario Charge back</h2>
+<h4>Main Success Scenario and steps</h4>
+1. User full fill form for reverse paymnet from merchant
+2. Merchant tell webservice to charge back
+3. User get charge back
 
+<h4>Extensions</h4>
+2 Admin of website do not permit to charge back
+
+<h4>Trigger</h4>
+  User selects to pay by "Reverse"  
+
+<h4>Precondition</h4>
+  User paid payment already
+
+<h4>Guarantee</h4>
+  User can get charge back from payment
 4. User registration
  When customer can not login to the system.
   * Primary Actor: Customer
