@@ -17,23 +17,66 @@ There is not include parts that use bank api to redeem money from this service o
 
 <h3>Use Cases</h3>
 1. Send a payment
-When client get price, recipient id, sender id, and date time, it can POST payment to webservice.
+When client get price, order id, merchant id, and date time, it can POST payment to webservice.
   * Primary Actor: Merchant
   * Scope: Payment System
   * Level: Very High
   * Story: Merchant send a payment to customer.
+
+<h2>Scenario Create payment</h2>
+<h4>Main Success Scenario and steps</h4>
+1. User choose product
+2. User proceed and check out
+3. Merchant website will send order id, merchant id, total amount, and date time for create payment to webservice
+Create Payment
+
+<h4>Extensions</h4>
+2a. Total amount is minus value
+    .1 Merchant have to send order id, merchant id, total amount, and date time again
+
+<h4>Trigger</h4>
+  User selects to pay by "Ku paypal"  
+
+<h4>Guarantee</h4>
+  User can create payment
+
+
 2. Accept a payment (funds transferred)
 When customer sure for transfer money, they can PUT payment to accept the payment.
   * Primary Actor: Customer
   * Scope: Payment System
   * Level: Very High
   * Story: Customer approve a payment then funds transferred to merchant. (payment completed)
+
+<h2>Scenario Accept a payment</h2>
+<h4>Main Success Scenario and steps</h4>
+1. User will see all of detail of payment
+2. User accept the payment
+
+Create Account
+
+<h4>Precondition</h4>
+  User is logged in to ku paypal
+  User proceed or check out from merchant
+
+<h4>Guarantee</h4>
+  User pay the payment
+
+
 3. Reverse/chargeback a payment
 When customer see payment description, price/merchant is not correct, Customer will decline this payment.
   * Primary Actor: Customer
   * Scope: Payment System
   * Level: Low
   * Story: Some problem occured. Customers want to refund their funds back. They go and try to reverse/rollback a payment.
+
+
+4. User registration
+ When customer can not login to the system.
+  * Primary Actor: Customer
+  * Scope: Account management
+  * Level: High
+  * Story: Customer want to become a member of the system.
 
 <h2>Scenario Register</h2>
 <h4>Main Success Scenario and steps</h4>
@@ -61,6 +104,13 @@ Create Account
 <h4>Guarantee</h4>
   User becomes a registeredplayer
 
+  5. User Log In
+ When customer want to accessto the system.
+  * Primary Actor: Customer
+  * Scope: Account management
+  * Level: High
+  * Story: Customer want to login to the system.
+
 <h2>Scenario Login User</h2>
 <h4>Main Sucess scenario</h4>
 1. User types his/her user name
@@ -79,6 +129,13 @@ User does not login yet
 
 <h4>Guarantee</h4>
 The user can see his/her own information in paypal
+
+  6. User Log In Failed
+ When customer want to accessto the system.
+  * Primary Actor: Customer
+  * Scope: Account management
+  * Level: High
+  * Story: Customer want to login to the system.
 
 <h2> Scenario Login failed</h2>
 <h3>Login Failed</h3>
