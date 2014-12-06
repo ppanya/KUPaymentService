@@ -16,7 +16,7 @@ There is not include parts that use bank api to redeem money from this service o
 <br><b><i>note:</i></b> It should have a standard for Problem term but it seem hard to set it up.
 
 <h3>Use Cases</h3>
-1. Send a payment
+<h2>1. Send a payment</h2>
 When client get price, order id, merchant id, and date time, it can POST payment to webservice.
   * Primary Actor: Merchant
   * Scope: Payment System
@@ -41,7 +41,7 @@ Create Payment
   User can create payment
 
 
-2. Accept a payment (funds transferred)
+<h2>2. Accept a payment (funds transferred)</h2>
 When customer sure for transfer money, they can PUT payment to accept the payment.
   * Primary Actor: Customer
   * Scope: Payment System
@@ -63,7 +63,7 @@ Create Account
   User pay the payment
 
 
-3. Reverse/chargeback a payment
+<h2>3. Reverse/chargeback a payment</h2>
 When customer see payment description, price/merchant is not correct, Customer will decline this payment.
   * Primary Actor: Customer
   * Scope: Payment System
@@ -87,7 +87,7 @@ When customer see payment description, price/merchant is not correct, Customer w
 
 <h4>Guarantee</h4>
   User can get charge back from payment
-4. User registration
+<h2>4. User registration</h2>
  When customer can not login to the system.
   * Primary Actor: Customer
   * Scope: Account management
@@ -120,7 +120,7 @@ Create Account
 <h4>Guarantee</h4>
   User becomes a registeredplayer
 
-  5. User Log In
+<h2>5. User Log In</h2>
  When customer want to accessto the system.
   * Primary Actor: Customer
   * Scope: Account management
@@ -146,7 +146,7 @@ User does not login yet
 <h4>Guarantee</h4>
 The user can see his/her own information in paypal
 
-  6. User Log In Failed
+<h2>6. User Log In Failed</h2>
  When customer want to accessto the system.
   * Primary Actor: Customer
   * Scope: Account management
