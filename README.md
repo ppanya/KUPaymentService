@@ -17,7 +17,7 @@ There is not include parts that use bank api to redeem money from this service o
 
 <h3>Use Cases</h3>
 1. Send a payment
-When client get price ,recipient id ,sender id ,and date time, it can POST payment to webservice.
+When client get price, recipient id, sender id, and date time, it can POST payment to webservice.
   * Primary Actor: Merchant
   * Scope: Payment System
   * Level: Very High
@@ -35,10 +35,38 @@ When customer see payment description, price/merchant is not correct, Customer w
   * Level: Low
   * Story: Some problem occured. Customers want to refund their funds back. They go and try to reverse/rollback a payment.
 
+
+
 <h3>Functional Requirement</h3>
 1. Transaction history
 2. Current balance for each user.
 3. (Extra) Support multiple currency and multiple language
+
+<h3>Scenario Register</h3>
+<h4>Main Success Scenario and steps</h4>
+1. User types a user name of his or her choice
+2. User types a password
+3. User retypes the password
+4. User types his or her first name
+5. User types his or her last name
+6. User types his or her Address, Date of birth (Optional)
+7. User types his or her credit card number.
+Create Account
+
+<h4>Extensions</h4>
+1a. User name is already in use
+    .1 User is requested to select another user name and password
+3a. The two passwords are different
+    .1 User is requested to retype (twice) his/her password
+
+<h4>Trigger</h4>
+  User selects the "Sign Up" link 
+
+<h4>Precondition</h4>
+  User is not logged in
+
+<h4>Guarantee</h4>
+  User becomes a registeredplayer
 
 <h3>API Specification</h3>
 <b><i>[API Specification at github's wiki](https://github.com/maixezer/KUPaymentService/wiki/API-Specification) </i></b> <br>
