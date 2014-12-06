@@ -1,7 +1,7 @@
 <h1>KUPaymentService</h1>
 
 <h3>Description</h3>
-Payment Webservice, Service for payment from one user to other user. <br>
+Payment Webservice, Service for payment from one user to other user. There are two sides of user first is customer and merchant. User want to pay money to merchant by kupaypal. After check out payment from merchant, website will direct to kupaypal login. User have to have kupaypal id before login then kupaypal will show the order id merchant name total amount and time of purchased, user will choose accepted or decline for confirm that payment. Then kupaypal will redirect user to merchant website. <br>
 There is not include parts that use bank api to redeem money from this service or deposite money to this service.
 
 <h3>Stakeholder</h3>
@@ -34,13 +34,6 @@ When customer see payment description, price/merchant is not correct, Customer w
   * Scope: Payment System
   * Level: Low
   * Story: Some problem occured. Customers want to refund their funds back. They go and try to reverse/rollback a payment.
-
-
-
-<h3>Functional Requirement</h3>
-1. Transaction history
-2. Current balance for each user.
-3. (Extra) Support multiple currency and multiple language
 
 <h2>Scenario Register</h2>
 <h4>Main Success Scenario and steps</h4>
@@ -98,6 +91,16 @@ Precondition should be identical with the condition of the extension point
 <h3>Login without Registration</h3>
 <h4>Precondition</h4>
 -The User typed a non-registered user name
+Precondition should refine the precondition of Login Failed
+<h4>Main success scenario</h4>
+1. System redirects the User to the Login page
+2. System informs the User that he/she typed a non-registered user name
+
+<h3>Functional Requirement</h3>
+1. Transaction history
+2. Current balance for each user.
+3. (Extra) Support multiple currency and multiple language
+
 <h3>API Specification</h3>
 <b><i>[API Specification at github's wiki](https://github.com/maixezer/KUPaymentService/wiki/API-Specification) </i></b> <br>
 
