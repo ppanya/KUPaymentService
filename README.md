@@ -75,7 +75,7 @@ Create Account
 Login
 
 <h4>Extensions</h4>
-2a User provides invalid login parameter
+2a. User provides invalid login parameter
 (see Login Failed)
 
 <h4>Trigger</h4>
