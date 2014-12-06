@@ -23,7 +23,7 @@ When client get price, order id, merchant id, and date time, it can POST payment
   * Level: Very High
   * Story: Merchant send a payment to customer.
 
-<h2>Scenario Create payment</h2>
+<h3>Scenario Create payment</h3>
 <h4>Main Success Scenario and steps</h4>
 1. User choose product
 2. User proceed and check out
@@ -48,7 +48,7 @@ When customer sure for transfer money, they can PUT payment to accept the paymen
   * Level: Very High
   * Story: Customer approve a payment then funds transferred to merchant. (payment completed)
 
-<h2>Scenario Accept a payment</h2>
+<h3>Scenario Accept a payment</h3>
 <h4>Main Success Scenario and steps</h4>
 1. User will see all of detail of payment
 2. User accept the payment
@@ -70,7 +70,7 @@ When customer see payment description, price/merchant is not correct, Customer w
   * Level: Low
   * Story: Some problem occured. Customers want to refund their funds back. They go and try to reverse/rollback a payment.
 
-<h2>Scenario Charge back</h2>
+<h3>Scenario Charge back</h3>
 <h4>Main Success Scenario and steps</h4>
 1. User full fill form for reverse paymnet from merchant
 2. Merchant tell webservice to charge back
@@ -94,7 +94,7 @@ When customer see payment description, price/merchant is not correct, Customer w
   * Level: High
   * Story: Customer want to become a member of the system.
 
-<h2>Scenario Register</h2>
+<h3>Scenario Register</h3>
 <h4>Main Success Scenario and steps</h4>
 1. User types a user name of his or her choice
 2. User types a password
